@@ -1,0 +1,7 @@
+﻿<vertical spacing="1">
+	<vertical id="AddButtonTransform"/>
+	<custom-list id="FormatSettingList" contents="FormatSettings" stick-scrolling="false" show-scrollbar="true" size-delta-x="125" pref-width="125" cell-size="10" pref-height="40">
+		<horizontal horizontal-fit="PreferredSize" id="HorizontalLayout">
+		</horizontal>
+	</custom-list>
+</vertical>

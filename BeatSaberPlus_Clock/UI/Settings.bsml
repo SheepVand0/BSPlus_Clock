@@ -1,0 +1,131 @@
+﻿<vertical child-control-height='false'>
+	<horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
+		<text text='Clock' align='Center' font-size='4.2'/>
+	</horizontal>
+
+	<horizontal id='Tabs' spacing='0' pad-top='0' min-width='145'>
+		<vertical spacing='0' pad-top='0'>
+			<horizontal id='TabSelector' pad-top='2' pref-height='7' pad-left='8' pad-right='8' min-width='145'>
+			</horizontal>
+
+			<horizontal min-height='2'></horizontal>
+
+			<!-- =========================================== -->
+
+			<horizontal id='TabProfiles' bg='round-rect-panel' min-height='65' spacing='0' pad='0'>
+				<vertical>
+					<horizontal id='ProfileListFrame' spacing='0' pad='0'>
+						<vertical min-width='5' pref-width='10'>
+							<page-button id='ProfilesUpButton' direction='Up'></page-button>
+							<page-button id='ProfilesDownButton' direction='Down'></page-button>
+						</vertical>
+						<vertical min-width='130' spacing='0' pad='0'>
+							<vertical id='ProfileListFrame_Background' bg='round-rect-panel'  min-width='130' pref-height='50' spacing='0' pad-top='1' pad-bottom='1'>
+								<list id='ProfilesList'>
+								</list>
+							</vertical>
+						</vertical>
+					</horizontal>
+
+					<horizontal id='ProfilesManagementButtons'>
+					</horizontal>
+				</vertical>
+			</horizontal>
+
+			<!-- =========================================== -->
+
+			<horizontal id='TabGeneral' bg='round-rect-panel' min-height='65' spacing='0' pad='0'>
+				<vertical>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Separator : '></text>
+					<vertical id='FormatElementsSeparatorTransform'/>
+					<horizontal>
+						<text font-size='3.5' align='Center' font-color='yellow' text='12/24 Format : '></text>
+						<toggle-setting id='BoolSeparateDayHours'/>
+						<text font-size='3.5' align='Center' font-color='yellow' text='AM/PM Format : '></text>
+						<toggle-setting id='BoolAmPm'/>
+					</horizontal>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Font Size (%) : '></text>
+					<slider-setting id='SliderFontSize' apply-on-change='true' min='0.01' max='1' increment='0.01' show-buttons='true' size-delta-x='40'/>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Font : '></text>
+					<dropdown-list-setting id='FontDropdown' choices='Fonts' value='FontValue'></dropdown-list-setting>
+					<horizontal pref-height='11'>
+					</horizontal>
+				</vertical>
+			</horizontal>
+
+			<horizontal id='TabFormat' bg='round-rect-panel' min-height='65' spacing='0' pad='0'>
+				<vertical>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Format'></text>
+					<vertical id='FormatTransform'/>
+					<horizontal pref-height='9'>
+					</horizontal>
+				</vertical>
+			</horizontal>
+
+			<!-- =========================================== -->
+
+			<horizontal id='TabStyle' bg='round-rect-panel' min-height='65' spacing='0' pad='0'>
+				<vertical>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Use Clock Gradient'></text>
+					<toggle-setting id='BoolUseClockGradient'/>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Use Four Clock Gradient Colors'></text>
+					<toggle-setting id='BoolUseFourClockGradientColors'/>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Default color : '></text>
+					<color-setting id='BoolClockColor'/>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Colors : '></text>
+					<horizontal>
+						<horizontal min-width='20'>
+							<color-setting id='ColorClock1' />
+						</horizontal>
+						<horizontal min-width='10'></horizontal>
+						<horizontal min-width='20'>
+							<color-setting id='ColorClock2' />
+						</horizontal>
+						<horizontal min-width='10'></horizontal>
+						<horizontal min-width='20'>
+							<color-setting id='ColorClock3' />
+						</horizontal>
+						<horizontal min-width='10'></horizontal>
+						<horizontal min-width='20'>
+							<color-setting id='ColorClock4' />
+						</horizontal>
+					</horizontal>
+					<horizontal pref-height='17'>
+					</horizontal>
+				</vertical>
+			</horizontal>
+
+			<!-- =========================================== -->
+
+			<horizontal id='TabPosition' bg='round-rect-panel' min-height='65' spacing='0' pad='0'>
+				<vertical>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Enable clock grabber'></text>
+					<toggle-setting id='EnableClockGrabbing'/>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Clock Movement Mode'></text>
+					<dropdown-list-setting id='ClockMovementMode' choices='ClockMovementModeList' value='MovementMode'/>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Enable Anchors'></text>
+					<toggle-setting id='EnableAnchors'/>
+					<horizontal pref-height='28'>
+					</horizontal>
+				</vertical>
+			</horizontal>
+		</vertical>
+	</horizontal>
+
+	<!-- =========================================== -->
+
+	<horizontal id='ImportProfileFrame' spacing='0' pad-top='-1' active='false'>
+		<horizontal>
+			<text text=' ' font-size='5.5' align='Center'/>
+		</horizontal>
+		<vertical id='ImportProfileFrame_Background' bg='round-rect-panel' pad='8'>
+			<text text='What profile do you want to import?' font-size='4.5' align='Center'/>
+			<dropdown-list-setting id='ImportProfileFrame_DropDown' choices='ImportProfileFrame_DropDownOptions' apply-on-change='true' />
+			<horizontal id='ImportFrameButtonsTransform'>
+			</horizontal>
+		</vertical>
+		<horizontal>
+			<text text=' ' font-size='5.5' align='Center'/>
+		</horizontal>
+	</horizontal>
+</vertical>

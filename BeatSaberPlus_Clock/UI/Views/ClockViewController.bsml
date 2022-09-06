@@ -1,0 +1,5 @@
+﻿<bg>
+	<vertical>
+		<text id='ClockText' text='Clock'/>
+	</vertical>
+</bg>
