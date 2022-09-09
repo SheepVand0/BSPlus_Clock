@@ -77,7 +77,9 @@ namespace BeatSaberPlus_Clock.UI
         [UIComponent("BoolAmPm")]             ToggleSetting       m_BoolAmPm             = null;
         [UIComponent("SliderFontSize")]       SliderSetting       m_Slider_FontSize      = null;
         [UIComponent("FontDropdown")]         DropDownListSetting m_FontDropdown         = null;
+        [UIObject("FontsRefreshLayout")]      GameObject          m_FontRefreshObject    = null;
 
+        Button m_FontRefreshButton = null;
         [UIValue("FontValue")] private string       FontValue { get => string.Empty; set { } }
         [UIValue("Fonts")]     private List<object> m_Fonts   = new List<object>() { "1" };
         #endregion
@@ -175,14 +177,17 @@ namespace BeatSaberPlus_Clock.UI
             #region General
             m_StringElementsSeparator = CustomUIComponent.Create<CustomStringSetting>(FormatElementsSeparatorTransform.transform, true, (p_Item) =>
             {
-                p_Item.Setup(Clock.m_ClockConfig.Separator, 32, true);
+                p_Item.Setup(CConfig.Instance.GetActiveConfig().Separator, 32, true);
                 p_Item.OnChange += OnSeparatorChange;
             });
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolSeparateDayHours, l_Event, Clock.m_ClockConfig.SeparateDayHours, true);
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolAmPm,             l_Event, Clock.m_ClockConfig.BoolAmPm, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolSeparateDayHours, l_Event, CConfig.Instance.GetActiveConfig().SeparateDayHours, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolAmPm,             l_Event, CConfig.Instance.GetActiveConfig().BoolAmPm, true);
 
-            BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_FontDropdown, l_Event, true);
-            m_FontPercent = ((Clock.m_ClockConfig.FontSize / 10) * 100 / 300) / Clock.CLOCK_FONT_SIZE_MULTIPLIER;
+            BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_FontDropdown, l_FontDropdownEvent, true);
+            Clock.e_OnFontsLoaded += OnFontsLoaded;
+            OnFontsLoaded();
+            m_FontRefreshButton = BeatSaberPlus.SDK.UI.Button.Create(m_FontRefreshObject.transform, "Refresh fonts", () => { Clock.LoadFonts(); });
+            m_FontPercent = ((CConfig.Instance.GetActiveConfig().FontSize / 10) * 100 / 300) / Clock.CLOCK_FONT_SIZE_MULTIPLIER;
             BeatSaberPlus.SDK.UI.SliderSetting.Setup(m_Slider_FontSize, l_FontSizeEvent, BeatSaberPlus.SDK.UI.BSMLSettingFormartter.Percentage, m_FontPercent, true);
             //UpdateFontsList();
             #endregion
@@ -192,29 +197,39 @@ namespace BeatSaberPlus_Clock.UI
             #endregion
 
             #region Style
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_Bool_UseClockGradient,      l_Event, Clock.m_ClockConfig.UseGradient,           true);
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_Bool_UseFourGradientColors, l_Event, Clock.m_ClockConfig.UseFourColorsGradient, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_Bool_UseClockGradient,      l_Event, CConfig.Instance.GetActiveConfig().UseGradient,           true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_Bool_UseFourGradientColors, l_Event, CConfig.Instance.GetActiveConfig().UseFourColorsGradient, true);
 
-            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock,  l_Event, Clock.m_ClockConfig.ClockColor.ToUnityColor(),          true);
-            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock1, l_Event, Clock.m_ClockConfig.ClockGradientColor1.ToUnityColor(), true);
-            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock2, l_Event, Clock.m_ClockConfig.ClockGradientColor2.ToUnityColor(), true);
-            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock3, l_Event, Clock.m_ClockConfig.ClockGradientColor3.ToUnityColor(), true);
-            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock4, l_Event, Clock.m_ClockConfig.ClockGradientColor4.ToUnityColor(), true);
+            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock,  l_Event, CConfig.Instance.GetActiveConfig().ClockColor,          true);
+            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock1, l_Event, CConfig.Instance.GetActiveConfig().ClockGradientColor1, true);
+            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock2, l_Event, CConfig.Instance.GetActiveConfig().ClockGradientColor2, true);
+            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock3, l_Event, CConfig.Instance.GetActiveConfig().ClockGradientColor3, true);
+            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock4, l_Event, CConfig.Instance.GetActiveConfig().ClockGradientColor4, true);
 
-            m_Color_Clock2.interactable = Clock.m_ClockConfig.UseGradient;
-            m_Color_Clock3.interactable = Clock.m_ClockConfig.UseFourColorsGradient;
-            m_Color_Clock4.interactable = Clock.m_ClockConfig.UseFourColorsGradient;
+            m_Color_Clock2.interactable = CConfig.Instance.GetActiveConfig().UseGradient;
+            m_Color_Clock3.interactable = CConfig.Instance.GetActiveConfig().UseFourColorsGradient;
+            m_Color_Clock4.interactable = CConfig.Instance.GetActiveConfig().UseFourColorsGradient;
             #endregion
 
             #region Position
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableClockGrabbing, l_Event, Clock.m_ClockConfig.EnableClockGrabbing, true);
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableAnchors, l_Event, Clock.m_ClockConfig.EnableAnchors, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableClockGrabbing, l_Event, CConfig.Instance.GetActiveConfig().EnableClockGrabbing, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableAnchors, l_Event, CConfig.Instance.GetActiveConfig().EnableAnchors, true);
             BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_ClockMovementMode, l_ClockMovementDropdownEvent, true);
             #endregion
 
             Clock.e_OnConfigLoaded += OnConfidLoaded;
 
             OnTabSelected(null, 0);
+        }
+
+        private void OnFontsLoaded()
+        {
+            m_FontDropdown.values.Clear();
+            foreach (var l_Current in Clock.m_AvailableFonts)
+                m_FontDropdown.values.Add(l_Current.name);
+            m_FontDropdown.UpdateChoices();
+            m_FontDropdown.Value = CConfig.Instance.GetActiveConfig().FontName;
+            m_FontDropdown.ApplyValue();
         }
 
         /// <summary>
@@ -231,20 +246,20 @@ namespace BeatSaberPlus_Clock.UI
         #region Config managment
         private void OnConfidLoaded()
         {
-            m_EnableClockGrabbing.Value = Clock.m_ClockConfig.EnableClockGrabbing;
-            m_EnableAnchors.Value = Clock.m_ClockConfig.EnableAnchors;
-            m_BoolSeparateDayHours.Value = Clock.m_ClockConfig.SeparateDayHours;
-            m_BoolAmPm.Value = Clock.m_ClockConfig.BoolAmPm;
-            m_StringElementsSeparator.SetValue(Clock.m_ClockConfig.Separator);
+            m_EnableClockGrabbing.Value = CConfig.Instance.GetActiveConfig().EnableClockGrabbing;
+            m_EnableAnchors.Value = CConfig.Instance.GetActiveConfig().EnableAnchors;
+            m_BoolSeparateDayHours.Value = CConfig.Instance.GetActiveConfig().SeparateDayHours;
+            m_BoolAmPm.Value = CConfig.Instance.GetActiveConfig().BoolAmPm;
+            m_StringElementsSeparator.SetValue(CConfig.Instance.GetActiveConfig().Separator);
             m_FormatSettingsList.LoadFromConfig();
-            m_Slider_FontSize.Value = ((Clock.m_ClockConfig.FontSize / 10) * 100 / 300) / Clock.CLOCK_FONT_SIZE_MULTIPLIER;
-            m_Bool_UseClockGradient.Value = Clock.m_ClockConfig.UseGradient;
-            m_Bool_UseFourGradientColors.Value = Clock.m_ClockConfig.UseFourColorsGradient;
-            m_Color_Clock.CurrentColor = Clock.m_ClockConfig.ClockColor.ToUnityColor();
-            m_Color_Clock1.CurrentColor = Clock.m_ClockConfig.ClockGradientColor1.ToUnityColor();
-            m_Color_Clock2.CurrentColor = Clock.m_ClockConfig.ClockGradientColor2.ToUnityColor();
-            m_Color_Clock3.CurrentColor = Clock.m_ClockConfig.ClockGradientColor3.ToUnityColor();
-            m_Color_Clock4.CurrentColor = Clock.m_ClockConfig.ClockGradientColor4.ToUnityColor();
+            m_Slider_FontSize.Value = ((CConfig.Instance.GetActiveConfig().FontSize / 10) * 100 / 300) / Clock.CLOCK_FONT_SIZE_MULTIPLIER;
+            m_Bool_UseClockGradient.Value = CConfig.Instance.GetActiveConfig().UseGradient;
+            m_Bool_UseFourGradientColors.Value = CConfig.Instance.GetActiveConfig().UseFourColorsGradient;
+            m_Color_Clock.CurrentColor = CConfig.Instance.GetActiveConfig().ClockColor;
+            m_Color_Clock1.CurrentColor = CConfig.Instance.GetActiveConfig().ClockGradientColor1;
+            m_Color_Clock2.CurrentColor = CConfig.Instance.GetActiveConfig().ClockGradientColor2;
+            m_Color_Clock3.CurrentColor = CConfig.Instance.GetActiveConfig().ClockGradientColor3;
+            m_Color_Clock4.CurrentColor = CConfig.Instance.GetActiveConfig().ClockGradientColor4;
 
             ClockFloatingScreen.Instance.SetClockPositionByScene(BeatSaberPlus.SDK.Game.Logic.SceneType.Menu);
 
@@ -377,12 +392,11 @@ namespace BeatSaberPlus_Clock.UI
                 if (!System.IO.Directory.Exists(Clock.CLOCK_EXPORT_FOLDER))
                     System.IO.Directory.CreateDirectory(Clock.CLOCK_EXPORT_FOLDER);
 
-                JsonSerializerSettings l_Settings = new JsonSerializerSettings();
-                string l_SerializedConfig = JsonConvert.SerializeObject(Clock.m_ClockConfig, Formatting.Indented, l_Settings);
-                string l_FileName = $"{CP_SDK.Misc.Time.UnixTimeNow()}_{Clock.m_ClockConfig.ProfileName}.bspclock";
+                JObject l_SerializedConfig = JObject.FromObject(CConfig.Instance.GetActiveConfig());
+                string l_FileName = $"{CP_SDK.Misc.Time.UnixTimeNow()}_{CConfig.Instance.GetActiveConfig().ProfileName}.bspclock";
                 l_FileName = string.Concat(l_FileName.Split(System.IO.Path.GetInvalidFileNameChars()));
 
-                System.IO.File.WriteAllText($"{Clock.CLOCK_EXPORT_FOLDER}{l_FileName}", l_SerializedConfig);
+                System.IO.File.WriteAllText($"{Clock.CLOCK_EXPORT_FOLDER}{l_FileName}", l_SerializedConfig.ToString(Formatting.Indented));
                 ShowMessageModal($"Succefully exported {CConfig.Instance.Profiles[CConfig.Instance.SelectedProfileIndex].ProfileName}");
             } catch (System.Exception l_E)
             {
@@ -460,23 +474,25 @@ namespace BeatSaberPlus_Clock.UI
         #region Settings Change
         private void OnSettingChanged(object p_Value)
         {
-            Clock.m_ClockConfig.EnableClockGrabbing   = m_EnableClockGrabbing.Value;
-            Clock.m_ClockConfig.EnableAnchors         = m_EnableAnchors.Value;
-            Clock.m_ClockConfig.SeparateDayHours      = m_BoolSeparateDayHours.Value;
-            Clock.m_ClockConfig.BoolAmPm              = m_BoolAmPm.Value;
-            Clock.m_ClockConfig.Separator             = m_StringElementsSeparator.Text;
-            Clock.m_ClockConfig.UseGradient           = m_Bool_UseClockGradient.Value;
-            Clock.m_ClockConfig.UseFourColorsGradient = m_Bool_UseFourGradientColors.Value;
-            Clock.m_ClockConfig.ClockColor            = SerializableColor.ToSerializableColor(m_Color_Clock.CurrentColor);
-            Clock.m_ClockConfig.ClockGradientColor1   = SerializableColor.ToSerializableColor(m_Color_Clock1.CurrentColor);
-            Clock.m_ClockConfig.ClockGradientColor2   = SerializableColor.ToSerializableColor(m_Color_Clock2.CurrentColor);
-            Clock.m_ClockConfig.ClockGradientColor3   = SerializableColor.ToSerializableColor(m_Color_Clock3.CurrentColor);
-            Clock.m_ClockConfig.ClockGradientColor4   = SerializableColor.ToSerializableColor(m_Color_Clock4.CurrentColor);
+            var l_Profile = CConfig.Instance.GetActiveConfig();
 
-            m_Color_Clock1.interactable = Clock.m_ClockConfig.UseGradient;
-            m_Color_Clock2.interactable = Clock.m_ClockConfig.UseGradient;
-            m_Color_Clock3.interactable = Clock.m_ClockConfig.UseFourColorsGradient && Clock.m_ClockConfig.UseGradient;
-            m_Color_Clock4.interactable = Clock.m_ClockConfig.UseFourColorsGradient && Clock.m_ClockConfig.UseGradient;
+            l_Profile.EnableClockGrabbing   = m_EnableClockGrabbing.Value;
+            l_Profile.EnableAnchors         = m_EnableAnchors.Value;
+            l_Profile.SeparateDayHours      = m_BoolSeparateDayHours.Value;
+            l_Profile.BoolAmPm              = m_BoolAmPm.Value;
+            l_Profile.Separator             = m_StringElementsSeparator.Text;
+            l_Profile.UseGradient           = m_Bool_UseClockGradient.Value;
+            l_Profile.UseFourColorsGradient = m_Bool_UseFourGradientColors.Value;
+            l_Profile.ClockColor            = m_Color_Clock.CurrentColor;
+            l_Profile.ClockGradientColor1   = m_Color_Clock1.CurrentColor;
+            l_Profile.ClockGradientColor2   = m_Color_Clock2.CurrentColor;
+            l_Profile.ClockGradientColor3   = m_Color_Clock3.CurrentColor;
+            l_Profile.ClockGradientColor4   = m_Color_Clock4.CurrentColor;
+
+            m_Color_Clock1.interactable = CConfig.Instance.GetActiveConfig().UseGradient;
+            m_Color_Clock2.interactable = CConfig.Instance.GetActiveConfig().UseGradient;
+            m_Color_Clock3.interactable = CConfig.Instance.GetActiveConfig().UseFourColorsGradient && CConfig.Instance.GetActiveConfig().UseGradient;
+            m_Color_Clock4.interactable = CConfig.Instance.GetActiveConfig().UseFourColorsGradient && CConfig.Instance.GetActiveConfig().UseGradient;
 
             Clock.Instance.SaveConfig();
 
@@ -485,62 +501,40 @@ namespace BeatSaberPlus_Clock.UI
 
         private void OnFontSizeChanged(object p_Value)
         {
-            Clock.m_ClockConfig.FontSize = Clock.CLOCK_FONT_SIZE_MULTIPLIER * (((float)p_Value * 10) * 300 / 100);
+            CConfig.Instance.GetActiveConfig().FontSize = Clock.CLOCK_FONT_SIZE_MULTIPLIER * (((float)p_Value * 10) * 300 / 100);
             Clock.InvokeOnSettingChanged();
             Clock.Instance.SaveConfig();
         }
 
         private void OnFontSelected(object p_Value)
         {
-            Clock.m_ClockConfig.FontName = "Arial";
-        }
-
-        private static void DisableObjects(List<string> p_ObjectsToDisable)
-        {
-            try {
-                foreach (var l_Current in p_ObjectsToDisable)
-                    GameObject.Find(l_Current).SetActive(false);
-            } catch (System.Exception l_E)
-            {
-                Logger.Instance.Error(l_E);
-            }
-        }
-
-        private static void EnableObjects(List<string> p_Objects)
-        {
-            try
-            {
-                foreach (var l_Current in p_Objects)
-                {
-                    GameObject.Find(l_Current).SetActive(true);
-                }
-            } catch (System.Exception l_E)
-            {
-                Logger.Instance.Error(l_E);
-            }
+            CConfig.Instance.GetActiveConfig().FontName = (string)p_Value;
+            Clock.Instance.SaveConfig();
+            Clock.ApplyFont();
         }
 
         private void OnMovementModeSelected(object p_Value)
         {
-            /*MenuEnvironmentManager l_MenuEnvironmentManager = Resources.FindObjectsOfTypeAll<MenuEnvironmentManager>().FirstOrDefault();
-            GameScenesManager l_Manager = Resources.FindObjectsOfTypeAll<GameScenesManager>().FirstOrDefault();
             var l_MenuTransitionsHelper = Resources.FindObjectsOfTypeAll<MenuTransitionsHelper>().FirstOrDefault();
             var l_StandardLevelScenesTransitionSetupData = l_MenuTransitionsHelper.GetField<StandardLevelScenesTransitionSetupDataSO, MenuTransitionsHelper>("_standardLevelScenesTransitionSetupData");
             var l_StandardGameplaySceneInfo = l_StandardLevelScenesTransitionSetupData.GetField<SceneInfo, StandardLevelScenesTransitionSetupDataSO>("_standardGameplaySceneInfo");
             var l_GameCoreSceneInfo = l_StandardLevelScenesTransitionSetupData.GetField<SceneInfo, StandardLevelScenesTransitionSetupDataSO>("_gameCoreSceneInfo");
             PlayerData l_PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault().playerData;
-            */
-            EnvironmentSceneSetup l_SceneSetup = Resources.FindObjectsOfTypeAll<EnvironmentSceneSetup>().FirstOrDefault();
-            GameScenesManager l_GameScenesManager = Resources.FindObjectsOfTypeAll<GameScenesManager>().FirstOrDefault();
-            MenuEnvironmentManager l_MenuEnvironmentManager = Resources.FindObjectsOfTypeAll<MenuEnvironmentManager>().FirstOrDefault();
-            MenuTransitionsHelper l_MenuTransitionsHelper = Resources.FindObjectsOfTypeAll<MenuTransitionsHelper>().FirstOrDefault();
-            PlayerData l_PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModel>().First().playerData;
+
+            Dictionary<EnvironmentTypeSO, EnvironmentInfoSO> l_Data = l_PlayerData.overrideEnvironmentSettings.GetField<Dictionary<EnvironmentTypeSO, EnvironmentInfoSO>, OverrideEnvironmentSettings>("_data");
 
             switch ((string)p_Value)
             {
                 case "Game":
-                    Clock.m_MovementMode = ClockMovementMode.Menu;
-                    ClockFloatingScreen.Instance.SetClockPositionByScene(BeatSaberPlus.SDK.Game.Logic.SceneType.Menu);
+                    Clock.m_MovementMode = BeatSaberPlus.SDK.Game.Logic.SceneType.Playing;
+                    ClockFloatingScreen.Instance.SetClockPositionByScene(BeatSaberPlus.SDK.Game.Logic.SceneType.Playing);
+
+                    Resources.FindObjectsOfTypeAll<MenuEnvironmentManager>()[0].ShowEnvironmentType(MenuEnvironmentManager.MenuEnvironmentType.None);
+                    UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(l_Data.ElementAt(0).Value.sceneInfo.sceneName, LoadSceneMode.Additive);
+
+                    //Resources.FindObjectsOfTypeAll<EnvironmentShaderWarmup>()[0].Start();
+
+                    //l_PlayerData.overrideEnvironmentSettings.GetOverrideEnvironmentInfoForType(l_PlayerData.overrideEnvironmentSettings.);
 
                     /*l_GameScenesManager.GetField<HashSet<string>, GameScenesManager>("_neverUnloadScenes").Add("MenuCore");
                     StandardLevelScenesTransitionSetupDataSO l_standardLevelScenesTransitionSetupData = l_MenuTransitionsHelper.GetField<StandardLevelScenesTransitionSetupDataSO, MenuTransitionsHelper>("_standardLevelScenesTransitionSetupData");
@@ -561,8 +555,10 @@ namespace BeatSaberPlus_Clock.UI
                     EnableObjects(new List<string> { "EventSystem", "ControllerLeft", "ControllerRight" });*/
                     break;
                 case "Menu":
-                    Clock.m_MovementMode = ClockMovementMode.Game;
-                    ClockFloatingScreen.Instance.SetClockPositionByScene(BeatSaberPlus.SDK.Game.Logic.SceneType.Playing);
+                    Clock.m_MovementMode = BeatSaberPlus.SDK.Game.Logic.SceneType.Menu;
+                    ClockFloatingScreen.Instance.SetClockPositionByScene(BeatSaberPlus.SDK.Game.Logic.SceneType.Menu);
+
+                    UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(l_Data.ElementAt(0).Value.sceneInfo.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
 
                     /*l_GameScenesManager.PopScenes(0.25f, null, (_) =>
                     {
@@ -575,7 +571,6 @@ namespace BeatSaberPlus_Clock.UI
                     break;
             }
         }
-
         private void OnImportProfileSelected(object p_Value)
         {
             m_SelectedImportProfile = (string)p_Value;
@@ -583,7 +578,7 @@ namespace BeatSaberPlus_Clock.UI
 
         private void OnSeparatorChange(string p_Value)
         {
-            Clock.m_ClockConfig.Separator = p_Value;
+            CConfig.Instance.GetActiveConfig().Separator = p_Value;
         }
         #endregion
 
@@ -598,7 +593,7 @@ namespace BeatSaberPlus_Clock.UI
                 l_NewFonts.Add(l_Current.name);
             m_Fonts = l_NewFonts;
             m_FontDropdown.dropdown.ReloadData();
-            SelectFont(Clock.m_ClockConfig.FontName, true);
+            SelectFont(CConfig.Instance.GetActiveConfig().FontName, true);
         }
 
         internal void SelectFont(string p_Name, bool p_ApplyOnDropdown)
@@ -606,26 +601,13 @@ namespace BeatSaberPlus_Clock.UI
             foreach (var l_Current in Clock.m_AvailableFonts)
                 if (p_Name == l_Current.name)
                 {
-                    Clock.m_ClockConfig.FontName = p_Name;
+                    CConfig.Instance.GetActiveConfig().FontName = p_Name;
                     if (p_ApplyOnDropdown) { m_FontDropdown.Value = p_Name; m_FontDropdown.ApplyValue(); }
                     return;
                 }
-            Clock.m_ClockConfig.FontName = Clock.m_AvailableFonts[0].name;
+            CConfig.Instance.GetActiveConfig().FontName = Clock.m_AvailableFonts[0].name;
         }
         #endregion
-
-        ////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////
-
-        internal string ClockMovementModeToString(ClockMovementMode p_MovementMode)
-        {
-            switch (p_MovementMode)
-            {
-                case ClockMovementMode.Menu: return "Menu";
-                case ClockMovementMode.Game: return "Game";
-                default: return "Menu";
-            }
-        }
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////

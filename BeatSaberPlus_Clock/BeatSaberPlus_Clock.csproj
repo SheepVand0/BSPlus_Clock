@@ -163,7 +163,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CConfig.cs" />
-    <EmbeddedResource Include="Bundle\fontassetbundle" />
     <EmbeddedResource Include="Bundle\bspclockbundle" />
     <None Include="Directory.Build.props" />
     <Compile Include="GameObjects\Anchor.cs" />
@@ -178,7 +177,6 @@
     <Compile Include="UI\Components\CustomStringSetting.cs" />
     <Compile Include="UI\CustomSettingComponent.cs" />
     <Compile Include="UI\CustomUIComponent.cs" />
-    <Compile Include="UI\ResourceCustomUIComponent.cs" />
     <Compile Include="UI\Settings.cs" />
     <Compile Include="Utils\Utils.cs" />
     <EmbeddedResource Include="UI\Components\Views\CustomFormatCellList.bsml" />

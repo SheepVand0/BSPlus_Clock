@@ -48,6 +48,7 @@
 					<slider-setting id='SliderFontSize' apply-on-change='true' min='0.01' max='1' increment='0.01' show-buttons='true' size-delta-x='40'/>
 					<text font-size='3.5' align='Center' font-color='yellow' text='Font : '></text>
 					<dropdown-list-setting id='FontDropdown' choices='Fonts' value='FontValue'></dropdown-list-setting>
+					<horizontal id='FontsRefreshLayout'></horizontal>
 					<horizontal pref-height='11'>
 					</horizontal>
 				</vertical>

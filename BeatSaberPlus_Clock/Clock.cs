@@ -16,6 +16,16 @@ namespace BeatSaberPlus_Clock
     /// </summary>
     internal class Clock : BeatSaberPlus.SDK.BSPModuleBase<Clock>
     {
+        internal const string CLOCK_EXPORT_FOLDER        = "./UserData/BeatSaberPlus/Clock/Export/";
+
+        internal const string CLOCK_IMPORT_FOLDER        = "./UserData/BeatSaberPlus/Clock/Import/";
+
+        internal const string CLOCK_FONTS_FOLDER         =  "./UserData/BeatSaberPlus/Clock/Fonts";
+
+        internal const float  CLOCK_FONT_SIZE_MULTIPLIER = 0.34f;
+
+        internal const int    EVENT_PER_PAGES            = 10;
+
         /// <summary>
         /// Module type
         /// </summary>
@@ -43,23 +53,21 @@ namespace BeatSaberPlus_Clock
 
         internal static event Action e_OnConfigLoaded;
 
-        internal static event Action e_SettingEdited;
+        internal static event Action e_OnSettingEdited;
 
-        internal static CConfig.ClockConfig m_ClockConfig;
+        internal static event Action e_OnFontsLoaded;
 
         internal static List<Font> m_AvailableFonts = new List<Font>();
 
-        internal static ClockMovementMode m_MovementMode = ClockMovementMode.Menu;
+        internal static BeatSaberPlus.SDK.Game.Logic.SceneType m_MovementMode = BeatSaberPlus.SDK.Game.Logic.SceneType.Menu;
 
-        internal const string CLOCK_EXPORT_FOLDER = "./UserData/BeatSaberPlus/Clock/Export/";
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
 
-        internal const string CLOCK_IMPORT_FOLDER = "./UserData/BeatSaberPlus/Clock/Import/";
-
-        internal const float CLOCK_FONT_SIZE_MULTIPLIER = 0.34f;
-
-        internal const int EVENT_PER_PAGES = 10;
-
-        internal static int m_SelectedProfileIndex = 0;
+        /// <summary>
+        /// Settings view
+        /// </summary>
+        private UI.Settings m_SettingsView = null;
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
@@ -78,7 +86,8 @@ namespace BeatSaberPlus_Clock
         /// </summary>
         protected override void OnDisable()
         {
-            ClockFloatingScreen.Destroy();
+            e_OnConfigLoaded -= OnConfigLoaded;
+            ClockFloatingScreen.DestroyClock();
         }
 
         ////////////////////////////////////////////////////////////////////////////
@@ -86,18 +95,11 @@ namespace BeatSaberPlus_Clock
         #region Events Invoking
         internal static void InvokeOnSettingChanged()
         {
-            e_SettingEdited?.Invoke();
+            e_OnSettingEdited?.Invoke();
         }
 
         internal static void InvokeOnConfigLoaded()
         {
-            try
-            {
-                m_ClockConfig = CConfig.Instance.Profiles[CConfig.Instance.SelectedProfileIndex];
-            } catch (Exception l_E)
-            {
-                Logger.Instance.Error(l_E);
-            }
             e_OnConfigLoaded?.Invoke();
             Instance.OnConfigLoaded();
         }
@@ -106,24 +108,57 @@ namespace BeatSaberPlus_Clock
         #region Events
         private void OnConfigLoaded()
         {
-            Logger.Instance.Info("On Config loaded event called");
             if (ClockFloatingScreen.Instance == null)
                 ClockFloatingScreen.CreateClock();
             else
                 ClockFloatingScreen.Instance.ApplySettings();
-            //LoadFonts();
+            LoadFonts();
         }
         #endregion
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-
         #region Memeber Functions
-        private void LoadFonts()
+        internal static void LoadFonts()
         {
-            AssetBundle l_Bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"{Plugin.AssemblyName}.Bundle.fontassetbundle"));
             m_AvailableFonts.Clear();
-            Font[] l_TempFonts = l_Bundle.LoadAllAssets<Font>();
-            m_AvailableFonts.AddRange(l_TempFonts);
+            m_AvailableFonts.Add(Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font);
+
+            if (!System.IO.Directory.Exists(CLOCK_FONTS_FOLDER))
+                System.IO.Directory.CreateDirectory(CLOCK_FONTS_FOLDER);
+
+            var l_FontsFiles = System.IO.Directory.GetFiles(Clock.CLOCK_FONTS_FOLDER, "*.ttf");
+
+            List<Font> l_Fonts = new List<Font>();
+
+            for (int l_i = 0;l_i < l_FontsFiles.Length;l_i++)
+            {
+                m_AvailableFonts.Add(CP_SDK.Unity.FontManager.AddFontFile(l_FontsFiles[l_i]));
+
+                if (System.IO.Path.GetFileNameWithoutExtension(l_FontsFiles[l_i]) != CConfig.Instance.GetActiveConfig().FontName)
+                    continue;
+
+                ClockFloatingScreen.ClockFont = m_AvailableFonts[l_i];
+            }
+
+            if (m_AvailableFonts.Count == 1)
+            {
+                ClockFloatingScreen.ClockFont = m_AvailableFonts[0];
+                CConfig.Instance.GetActiveConfig().FontName = "Arial";
+            }
+
+            e_OnFontsLoaded?.Invoke();
+        }
+
+        internal static void ApplyFont()
+        {
+            for (int l_i = 0;l_i < m_AvailableFonts.Count;l_i++)
+            {
+                if (m_AvailableFonts[l_i].name != CConfig.Instance.GetActiveConfig().FontName)
+                    continue;
+
+                ClockFloatingScreen.ClockFont = m_AvailableFonts[l_i];
+                ClockFloatingScreen.Instance.ApplySettings();
+            }
         }
 
         /// <summary>
@@ -132,8 +167,10 @@ namespace BeatSaberPlus_Clock
         internal void SaveConfig()
         {
             for (int l_i = 0; l_i < CConfig.Instance.Profiles.Count; l_i++) {
-                if (m_ClockConfig.ProfileName == CConfig.Instance.Profiles[l_i].ProfileName)
-                    CConfig.Instance.Profiles[l_i] = m_ClockConfig;
+                if (CConfig.Instance.GetActiveConfig().ProfileName != CConfig.Instance.Profiles[l_i].ProfileName)
+                    continue;
+
+                CConfig.Instance.Profiles[l_i] = CConfig.Instance.GetActiveConfig();
             }
             CConfig.Instance.Save();
             InvokeOnSettingChanged();
@@ -158,15 +195,5 @@ namespace BeatSaberPlus_Clock
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-
-        /// <summary>
-        /// Settings view
-        /// </summary>
-        private UI.Settings m_SettingsView = null;
-    }
-    internal enum ClockMovementMode
-    {
-        Menu,
-        Game
     }
 }

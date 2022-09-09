@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace BeatSaberPlus_Clock
 {
@@ -25,14 +26,14 @@ namespace BeatSaberPlus_Clock
 
             [JsonProperty] internal string ProfileName = "Default";
 
-            [JsonProperty] internal SerializableVector3 MenuClockPosition = new SerializableVector3(0, 2, 0);
-            [JsonProperty] internal SerializableVector3 GameClockPosition = new SerializableVector3(0, 2, 0);
+            [JsonProperty] internal Vector3 MenuClockPosition = new Vector3(0, 2, 0);
+            [JsonProperty] internal Vector3 GameClockPosition = new Vector3(0, 2, 0);
 
-            [JsonProperty] internal SerializableVector3 MenuClockRotationEuler = new SerializableVector3(0, 90, 0);
-            [JsonProperty] internal SerializableVector3 GameClockRotationEuler = new SerializableVector3(0, 90, 0);
+            [JsonProperty] internal Vector3 MenuClockRotationEuler = new Vector3(0, 90, 0);
+            [JsonProperty] internal Vector3 GameClockRotationEuler = new Vector3(0, 90, 0);
 
             [JsonProperty] internal bool EnableClockGrabbing = false;
-            [JsonProperty] internal bool EnableAnchors = false;
+            [JsonProperty] internal bool EnableAnchors       = false;
 
             [JsonProperty] internal bool SeparateDayHours = false;
             [JsonProperty] internal bool BoolAmPm         = false;
@@ -46,11 +47,22 @@ namespace BeatSaberPlus_Clock
             [JsonProperty] internal bool  UseGradient           = false;
             [JsonProperty] internal bool  UseFourColorsGradient = false;
             [JsonProperty] internal bool  GradientHorizontal    = false;
-            [JsonProperty] internal SerializableColor ClockColor            = new SerializableColor(1, 1, 1, 1);
-            [JsonProperty] internal SerializableColor ClockGradientColor1   = new SerializableColor(1, 0, 1, 1);
-            [JsonProperty] internal SerializableColor ClockGradientColor2   = new SerializableColor(1, 0, 1, 1);
-            [JsonProperty] internal SerializableColor ClockGradientColor3   = new SerializableColor(1, 0, 0.8f, 1);
-            [JsonProperty] internal SerializableColor ClockGradientColor4   = new SerializableColor(1, 0, 0.8f, 1);
+            [JsonProperty] internal Color ClockColor            = new Color(1, 1, 1, 1);
+            [JsonProperty] internal Color ClockGradientColor1   = new Color(1, 0, 1, 1);
+            [JsonProperty] internal Color ClockGradientColor2   = new Color(1, 0, 1, 1);
+            [JsonProperty] internal Color ClockGradientColor3   = new Color(1, 0, 0.8f, 1);
+            [JsonProperty] internal Color ClockGradientColor4   = new Color(1, 0, 0.8f, 1);
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
+        internal ClockConfig GetActiveConfig()
+        {
+            if (Profiles.ElementAt(SelectedProfileIndex) == null)
+                SelectedProfileIndex = 0;
+
+            return Profiles.ElementAt(SelectedProfileIndex);
         }
 
         ////////////////////////////////////////////////////////////////////////////
@@ -78,6 +90,11 @@ namespace BeatSaberPlus_Clock
                 Profiles.Add(new ClockConfig("Default"));
                 SelectedProfileIndex = 0;
             }
+
+            if (Profiles.ElementAt(SelectedProfileIndex) == null)
+                SelectedProfileIndex = 0;
+
+            //m_JsonConverters[1].
         }
     }
 
@@ -96,58 +113,9 @@ namespace BeatSaberPlus_Clock
         public float AnchorRadius { get; set; }
     }
 
-    internal enum ConfigAccessibility
+    internal enum EClockMovementMode
     {
-        AllPlayers, CurrentPlayerOnly
-    }
-
-    internal class SerializableVector3
-    {
-        public float x { get; set; }
-        public float y { get; set; }
-        public float z { get; set; }
-
-        public SerializableVector3(float p_X, float p_Y, float p_Z)
-        {
-            x = p_X;
-            y = p_Y;
-            z = p_Z;
-        }
-
-        public Vector3 ToUnityVector3()
-        {
-            return new Vector3(x,y,z);
-        }
-
-        public static SerializableVector3 ToSerializableVector(Vector3 p_Vector)
-        {
-            return new SerializableVector3(p_Vector.x, p_Vector.y, p_Vector.z);
-        }
-    }
-
-    internal class SerializableColor
-    {
-        public float r { get; set; }
-        public float g { get; set; }
-        public float b { get; set; }
-        public float a { get; set; }
-
-        public SerializableColor(float p_R, float p_G, float p_B, float p_A)
-        {
-            r = p_R;
-            g = p_G;
-            b = p_B;
-            a = p_A;
-        }
-
-        public Color ToUnityColor()
-        {
-            return new Color(r, g, b, 1);
-        }
-
-        public static SerializableColor ToSerializableColor(Color p_Color)
-        {
-            return new SerializableColor(p_Color.r, p_Color.g, p_Color.b, 1);
-        }
+        Menu,
+        Game
     }
 }
