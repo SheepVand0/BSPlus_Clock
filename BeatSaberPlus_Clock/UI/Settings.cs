@@ -11,6 +11,8 @@ using System.Linq;
 using IPA.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using BeatSaberMarkupLanguage;
 
 namespace BeatSaberPlus_Clock.UI
 {
@@ -67,9 +69,9 @@ namespace BeatSaberPlus_Clock.UI
         private int m_CurrentProfilePage = 0;
         private int m_PageCount = 1;
 
-        [UIValue("ImportProfileFrame_DropDownOptions")] List<object> m_ImportProfileFrame_DropDownOptions = new List<object>();
-
         string m_SelectedImportProfile = string.Empty;
+
+        [UIValue("ImportProfileFrame_DropDownOptions")] List<object> m_ImportProfileFrame_DropDownOptions = new List<object>();
         #endregion
 
         #region General
@@ -85,13 +87,12 @@ namespace BeatSaberPlus_Clock.UI
         #endregion
 
         #region Format
+        [UIObject("FormatElementsSeparatorTransform")] private GameObject FormatElementsSeparatorTransform = null;
         [UIObject("FormatTransform")] GameObject m_FormatListTransform = null;
 
         Button               m_DocButton = null;
         CustomStringSetting  m_StringElementsSeparator = null;
         CustomFormatCellList m_FormatSettingsList = null;
-
-        [UIObject("FormatElementsSeparatorTransform")] private GameObject FormatElementsSeparatorTransform = null;
         #endregion
 
         #region Style
@@ -289,6 +290,7 @@ namespace BeatSaberPlus_Clock.UI
         private void OnProfileSelected(HMUI.TableView p_TableView, int p_Index)
         {
             CConfig.Instance.SelectedProfileIndex = p_Index;
+            CConfig.Instance.Save();
             Clock.InvokeOnConfigLoaded();
         }
 
@@ -348,6 +350,7 @@ namespace BeatSaberPlus_Clock.UI
                         if (p_NewValue == string.Empty) { ShowMessageModal("Configs Names Can't be empty"); return; }
                         CConfig.Instance.Profiles.Add(new CConfig.ClockConfig(p_NewValue));
                         CConfig.Instance.SelectedProfileIndex = CConfig.Instance.Profiles.Count - 1;
+                        CConfig.Instance.Save();
                         Clock.InvokeOnConfigLoaded();
                     };
                 });
@@ -360,11 +363,16 @@ namespace BeatSaberPlus_Clock.UI
         {
             if (CConfig.Instance.Profiles.Count == 1) { ShowMessageModal("You can't delete a config when you only own one"); return; }
 
+            string l_Name = CConfig.Instance.GetActiveConfig().ProfileName;
+
             CConfig.Instance.Profiles.RemoveAt(CConfig.Instance.SelectedProfileIndex);
 
             CConfig.Instance.SelectedProfileIndex -= 1;
             Clock.InvokeOnConfigLoaded();
+            CConfig.Instance.Save();
             RefreshProfilesList();
+
+            ShowMessageModal($"Succefully deleted profile : {l_Name}");
         }
 
         private void RenameProfile()
@@ -377,6 +385,7 @@ namespace BeatSaberPlus_Clock.UI
                     {
                         if (p_NewName == string.Empty) { ShowMessageModal("Configs Names Can't be empty"); return; }
                         CConfig.Instance.Profiles[CConfig.Instance.SelectedProfileIndex].ProfileName = p_NewName;
+                        CConfig.Instance.Save();
                         Clock.InvokeOnConfigLoaded();
                     };
                 });
@@ -392,14 +401,16 @@ namespace BeatSaberPlus_Clock.UI
                 if (!System.IO.Directory.Exists(Clock.CLOCK_EXPORT_FOLDER))
                     System.IO.Directory.CreateDirectory(Clock.CLOCK_EXPORT_FOLDER);
 
-                JObject l_SerializedConfig = JObject.FromObject(CConfig.Instance.GetActiveConfig());
+                string l_SerializedConfig = JsonConvert.SerializeObject(CConfig.Instance.GetActiveConfig(), CConfig.Instance.GetConverters().ToArray());
+
                 string l_FileName = $"{CP_SDK.Misc.Time.UnixTimeNow()}_{CConfig.Instance.GetActiveConfig().ProfileName}.bspclock";
                 l_FileName = string.Concat(l_FileName.Split(System.IO.Path.GetInvalidFileNameChars()));
 
-                System.IO.File.WriteAllText($"{Clock.CLOCK_EXPORT_FOLDER}{l_FileName}", l_SerializedConfig.ToString(Formatting.Indented));
+                System.IO.File.WriteAllText($"{Clock.CLOCK_EXPORT_FOLDER}{l_FileName}", l_SerializedConfig);
                 ShowMessageModal($"Succefully exported {CConfig.Instance.Profiles[CConfig.Instance.SelectedProfileIndex].ProfileName}");
             } catch (System.Exception l_E)
             {
+                ShowMessageModal($"Error on exporting : {l_E.Message}");
                 Logger.Instance.Error(l_E);
             }
         }
@@ -436,7 +447,7 @@ namespace BeatSaberPlus_Clock.UI
                 string l_FileName = $"{Clock.CLOCK_IMPORT_FOLDER}{m_SelectedImportProfile}.bspclock";
                 if (!System.IO.File.Exists(l_FileName)) { ShowMessageModal("File not found"); return; }
                 string l_NewConfigName = string.Empty;
-                CConfig.ClockConfig l_NewConfig = JsonConvert.DeserializeObject<CConfig.ClockConfig>(System.IO.File.ReadAllText(l_FileName));
+                CConfig.ClockConfig l_NewConfig = JsonConvert.DeserializeObject<CConfig.ClockConfig>(System.IO.File.ReadAllText(l_FileName), CConfig.Instance.GetConverters().ToArray());
                 CConfig.Instance.Profiles.Add(l_NewConfig);
                 l_NewConfig.ProfileName = $"{l_NewConfig.ProfileName} (Imported)";
                 ShowMessageModal($"Succefully Imported Config {l_NewConfig.ProfileName}");
@@ -444,7 +455,7 @@ namespace BeatSaberPlus_Clock.UI
                 RefreshProfilesList();
             } catch (System.Exception l_E)
             {
-                ShowMessageModal("On error ocurred on profile import");
+                ShowMessageModal($"Error on import : {l_E.Message}");
                 Logger.Instance.Error(l_E);
             }
         }
@@ -509,7 +520,7 @@ namespace BeatSaberPlus_Clock.UI
         private void OnFontSelected(object p_Value)
         {
             CConfig.Instance.GetActiveConfig().FontName = (string)p_Value;
-            Clock.Instance.SaveConfig();
+            CConfig.Instance.Save();
             Clock.ApplyFont();
         }
 
@@ -529,42 +540,11 @@ namespace BeatSaberPlus_Clock.UI
                     Clock.m_MovementMode = BeatSaberPlus.SDK.Game.Logic.SceneType.Playing;
                     ClockFloatingScreen.Instance.SetClockPositionByScene(BeatSaberPlus.SDK.Game.Logic.SceneType.Playing);
 
-                    Resources.FindObjectsOfTypeAll<MenuEnvironmentManager>()[0].ShowEnvironmentType(MenuEnvironmentManager.MenuEnvironmentType.None);
-                    UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(l_Data.ElementAt(0).Value.sceneInfo.sceneName, LoadSceneMode.Additive);
-
-                    //Resources.FindObjectsOfTypeAll<EnvironmentShaderWarmup>()[0].Start();
-
-                    //l_PlayerData.overrideEnvironmentSettings.GetOverrideEnvironmentInfoForType(l_PlayerData.overrideEnvironmentSettings.);
-
-                    /*l_GameScenesManager.GetField<HashSet<string>, GameScenesManager>("_neverUnloadScenes").Add("MenuCore");
-                    StandardLevelScenesTransitionSetupDataSO l_standardLevelScenesTransitionSetupData = l_MenuTransitionsHelper.GetField<StandardLevelScenesTransitionSetupDataSO, MenuTransitionsHelper>("_standardLevelScenesTransitionSetupData");
-
-                    LevelCollectionTableView l_Levels = Resources.FindObjectsOfTypeAll<LevelCollectionTableView>().FirstOrDefault();
-
-                    StandardLevelDetailViewController l_StandardLevelDetailViewController = Resources.FindObjectsOfTypeAll<StandardLevelDetailViewController>().FirstOrDefault();
-                    IReadOnlyList<IPreviewBeatmapLevel> l_previewBeatmapLevels = Resources.FindObjectsOfTypeAll<LevelCollectionTableView>().FirstOrDefault().GetField<IReadOnlyList<IPreviewBeatmapLevel>, LevelCollectionTableView>("_previewBeatmapLevels");
-
-                    l_standardLevelScenesTransitionSetupData.Init("Standard", l_StandardLevelDetailViewController.selectedDifficultyBeatmap, l_previewBeatmapLevels[0],l_PlayerData.overrideEnvironmentSettings,
-                        l_PlayerData.colorSchemesSettings.GetSelectedColorScheme(), l_PlayerData.gameplayModifiers, l_PlayerData.playerSpecificSettings, l_PlayerData.practiceSettings, "Menu", true, true);
-
-                    Transform l_Gameplay = GameObject.Find("StandardGameplay").transform;
-
-                    l_MenuEnvironmentManager.transform.root.gameObject.SetActive(true);
-
-                    l_Gameplay.gameObject.SetActive(false);
-                    EnableObjects(new List<string> { "EventSystem", "ControllerLeft", "ControllerRight" });*/
                     break;
                 case "Menu":
                     Clock.m_MovementMode = BeatSaberPlus.SDK.Game.Logic.SceneType.Menu;
                     ClockFloatingScreen.Instance.SetClockPositionByScene(BeatSaberPlus.SDK.Game.Logic.SceneType.Menu);
 
-                    UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(l_Data.ElementAt(0).Value.sceneInfo.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
-
-                    /*l_GameScenesManager.PopScenes(0.25f, null, (_) =>
-                    {
-                        l_GameScenesManager.GetField<HashSet<string>, GameScenesManager>("_neverUnloadScenes").Remove("MenuCore");
-                        l_MenuEnvironmentManager.ShowEnvironmentType(MenuEnvironmentManager.MenuEnvironmentType.Default);
-                    });*/
                     break;
                 default:
                     Logger.Instance.Error("Not Valid movement selected");
@@ -608,6 +588,61 @@ namespace BeatSaberPlus_Clock.UI
             CConfig.Instance.GetActiveConfig().FontName = Clock.m_AvailableFonts[0].name;
         }
         #endregion
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
+        private void LoadEnvironment(Action p_Callback = null)
+        {
+
+            var l_GameSceneManager = Resources.FindObjectsOfTypeAll<GameScenesManager>().FirstOrDefault();
+            var l_MainSettings = Resources.FindObjectsOfTypeAll<SettingsFlowCoordinator>().FirstOrDefault();
+
+            l_GameSceneManager.MarkSceneAsPersistent("MenuCore");
+
+            var l_TutorialSceneSetup = Resources.FindObjectsOfTypeAll<MenuTransitionsHelper>().FirstOrDefault().GetField<TutorialScenesTransitionSetupDataSO, MenuTransitionsHelper>("_tutorialScenesTransitionSetupData");
+            l_TutorialSceneSetup.Init(Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault().playerData.playerSpecificSettings);
+
+            var l_MenuEnvironmentManager = Resources.FindObjectsOfTypeAll<MenuEnvironmentManager>().FirstOrDefault();
+            l_MenuEnvironmentManager.ShowEnvironmentType(MenuEnvironmentManager.MenuEnvironmentType.None);
+
+            Transform l_Tutorial = GameObject.Find("TutorialGameplay").transform;
+
+            l_GameSceneManager.PushScenes(l_TutorialSceneSetup, 0.25f, null, (_) =>
+            {
+                l_MenuEnvironmentManager.transform.root.gameObject.SetActive(true);
+
+                Resources.FindObjectsOfTypeAll<MenuShockwave>().FirstOrDefault().gameObject.SetActive(false);
+
+                Resources.FindObjectsOfTypeAll<SongPreviewPlayer>().FirstOrDefault().CrossfadeToDefault();
+
+                if (!Environment.GetCommandLineArgs().Any(p_Arg => p_Arg.ToLowerInvariant() == "fpfc"))
+                {
+                    GameObject.Find("EventSystem").gameObject.SetActive(true);
+                    GameObject.Find("ControllerLeft").gameObject.SetActive(true);
+                    GameObject.Find("ControllerRight").gameObject.SetActive(true);
+                } else
+                {
+                    foreach (Transform l_Child in l_Tutorial)
+                        l_Child.gameObject.SetActive(false);
+                }
+
+                p_Callback?.Invoke();
+            });
+        }
+
+        private void UnloadEnvironment()
+        {
+            GameScenesManager l_ScenesManager = Resources.FindObjectsOfTypeAll<GameScenesManager>().FirstOrDefault();
+            l_ScenesManager.PopScenes(0.25f, null, (_) =>
+            {
+                HashSet<string> l_Scenes = l_ScenesManager.GetField<HashSet<string>, GameScenesManager>("_neverUnloadScenes");
+                l_Scenes.Remove("MenuCore");
+                l_ScenesManager.SetField("_neverUnloadScenes", l_Scenes);
+                Resources.FindObjectsOfTypeAll<FadeInOutController>().FirstOrDefault().FadeIn();
+                Resources.FindObjectsOfTypeAll<SongPreviewPlayer>().FirstOrDefault().CrossfadeToDefault();
+            });
+        }
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////

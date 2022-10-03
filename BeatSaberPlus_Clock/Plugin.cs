@@ -22,7 +22,7 @@ namespace BeatSaberPlus_Clock
 
         internal static string AssemblyName = "BeatSaberPlus_Clock";
         internal static string ResourcesPath = $"{AssemblyName}.Resources";
-        private static Harmony m_Harmony = new Harmony("fr.beatsaberplus.sheepvand.clock");
+        //private static Harmony m_Harmony = new Harmony("fr.beatsaberplus.sheepvand.clock");
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
@@ -49,14 +49,7 @@ namespace BeatSaberPlus_Clock
         [OnStart]
         public void OnApplicationStart()
         {
-            try
-            {
-                m_Harmony.PatchAll();
-            }
-            catch (System.Exception p_Exception)
-            {
-                Logger.Instance.Critical(p_Exception);
-            }
+            //m_Harmony.PatchAll();
         }
         /// <summary>
         /// On BeatSaberPlus_Online disable
@@ -64,7 +57,6 @@ namespace BeatSaberPlus_Clock
         [OnExit]
         public void OnApplicationQuit()
         {
-            m_Harmony.UnpatchSelf();
         }
     }
 }

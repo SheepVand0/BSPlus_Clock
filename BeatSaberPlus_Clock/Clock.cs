@@ -51,6 +51,8 @@ namespace BeatSaberPlus_Clock
         /// </summary>
         public override CP_SDK.EIModuleBaseActivationType ActivationType => CP_SDK.EIModuleBaseActivationType.OnMenuSceneLoaded;
 
+        internal static BeatSaberPlus.SDK.Game.Logic.SceneType m_MovementMode = BeatSaberPlus.SDK.Game.Logic.SceneType.Menu;
+
         internal static event Action e_OnConfigLoaded;
 
         internal static event Action e_OnSettingEdited;
@@ -58,8 +60,6 @@ namespace BeatSaberPlus_Clock
         internal static event Action e_OnFontsLoaded;
 
         internal static List<Font> m_AvailableFonts = new List<Font>();
-
-        internal static BeatSaberPlus.SDK.Game.Logic.SceneType m_MovementMode = BeatSaberPlus.SDK.Game.Logic.SceneType.Menu;
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
@@ -108,11 +108,11 @@ namespace BeatSaberPlus_Clock
         #region Events
         private void OnConfigLoaded()
         {
+            LoadFonts();
             if (ClockFloatingScreen.Instance == null)
                 ClockFloatingScreen.CreateClock();
             else
                 ClockFloatingScreen.Instance.ApplySettings();
-            LoadFonts();
         }
         #endregion
         ////////////////////////////////////////////////////////////////////////////
@@ -153,8 +153,7 @@ namespace BeatSaberPlus_Clock
         {
             for (int l_i = 0;l_i < m_AvailableFonts.Count;l_i++)
             {
-                if (m_AvailableFonts[l_i].name != CConfig.Instance.GetActiveConfig().FontName)
-                    continue;
+                if (m_AvailableFonts[l_i].name != CConfig.Instance.GetActiveConfig().FontName) continue;
 
                 ClockFloatingScreen.ClockFont = m_AvailableFonts[l_i];
                 ClockFloatingScreen.Instance.ApplySettings();

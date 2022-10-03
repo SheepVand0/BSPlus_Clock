@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using BeatSaberPlus_Clock.UI;
 
 namespace BeatSaberPlus_Clock
 {
@@ -26,11 +27,11 @@ namespace BeatSaberPlus_Clock
 
             [JsonProperty] internal string ProfileName = "Default";
 
-            [JsonProperty] internal Vector3 MenuClockPosition = new Vector3(0, 2, 0);
-            [JsonProperty] internal Vector3 GameClockPosition = new Vector3(0, 2, 0);
+            [JsonProperty] internal Vector3 MenuClockPosition = ClockFloatingScreen.m_Anchors[0].AnchorPosition;
+            [JsonProperty] internal Vector3 GameClockPosition = ClockFloatingScreen.m_Anchors[0].AnchorPosition;
 
-            [JsonProperty] internal Vector3 MenuClockRotationEuler = new Vector3(0, 90, 0);
-            [JsonProperty] internal Vector3 GameClockRotationEuler = new Vector3(0, 90, 0);
+            [JsonProperty] internal Vector3 MenuClockRotationEuler = ClockFloatingScreen.m_Anchors[0].AnchorRotationEuler;
+            [JsonProperty] internal Vector3 GameClockRotationEuler = ClockFloatingScreen.m_Anchors[0].AnchorRotationEuler;
 
             [JsonProperty] internal bool EnableClockGrabbing = false;
             [JsonProperty] internal bool EnableAnchors       = false;
@@ -41,7 +42,7 @@ namespace BeatSaberPlus_Clock
             [JsonProperty] internal string       Separator   = ":";
             [JsonProperty] internal List<string> FormatOrder = new List<string>() { "hh", "mn", "ss" };
 
-            [JsonProperty] internal float  FontSize  = 2f;
+            [JsonProperty] internal float  FontSize  = 75f;
             [JsonProperty] internal string FontName  = "Arial";
 
             [JsonProperty] internal bool  UseGradient           = false;
@@ -63,6 +64,11 @@ namespace BeatSaberPlus_Clock
                 SelectedProfileIndex = 0;
 
             return Profiles.ElementAt(SelectedProfileIndex);
+        }
+
+        internal List<JsonConverter> GetConverters()
+        {
+            return m_JsonConverters;
         }
 
         ////////////////////////////////////////////////////////////////////////////
@@ -93,8 +99,6 @@ namespace BeatSaberPlus_Clock
 
             if (Profiles.ElementAt(SelectedProfileIndex) == null)
                 SelectedProfileIndex = 0;
-
-            //m_JsonConverters[1].
         }
     }
 
@@ -111,11 +115,5 @@ namespace BeatSaberPlus_Clock
         public Vector3 AnchorPosition { get; set; }
         public Vector3 AnchorRotationEuler { get; set; }
         public float AnchorRadius { get; set; }
-    }
-
-    internal enum EClockMovementMode
-    {
-        Menu,
-        Game
     }
 }

@@ -7,6 +7,7 @@ using BeatSaberPlus.SDK.Game;
 using HMUI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace BeatSaberPlus_Clock.UI
 {
@@ -23,7 +24,7 @@ namespace BeatSaberPlus_Clock.UI
         private int m_LastUpdateSecond = -1;
         private ClockViewController m_ClockViewController = null;
 
-        public readonly List<Anchor> m_Anchors = new List<Anchor>() { new Anchor("Anchor_1", new Vector3(0, 2.8f, 3.85f), new Vector3(-14, 0, 0), GameObjects.Anchor.DEFAULT_RADIUS), new Anchor("Anchor_2", new Vector3(0, 0.4f, 3.85f), new Vector3(20, 0, 0), GameObjects.Anchor.DEFAULT_RADIUS) };
+        public static readonly List<Anchor> m_Anchors = new List<Anchor>() { new Anchor("Anchor_1", new Vector3(0, 2.7f, 3.87f), new Vector3(-10, 0, 0), GameObjects.Anchor.DEFAULT_RADIUS), new Anchor("Anchor_2", new Vector3(0, 0.4f, 3.85f), new Vector3(20, 0, 0), GameObjects.Anchor.DEFAULT_RADIUS) };
 
         internal static Font ClockFont = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
         #endregion
@@ -40,7 +41,7 @@ namespace BeatSaberPlus_Clock.UI
 
         public static void DestroyClock()
         {
-            GameObject.DestroyImmediate(Instance.FloatingScreenObject.gameObject);
+            Instance.Destroy();
             Instance = null;
         }
         #endregion
@@ -50,15 +51,15 @@ namespace BeatSaberPlus_Clock.UI
         {
             if (Instance != null) { Logger.Instance.Error("An instance of the clock already exist not creating"); return; }
 
-            m_DayTime = (float)DateTime.Now.TimeOfDay.TotalSeconds;
+            m_DayTime    = (float)DateTime.Now.TimeOfDay.TotalSeconds;
             m_LastUpdate = Time.realtimeSinceStartup;
 
             m_ClockViewController = BeatSaberUI.CreateViewController<ClockViewController>();
 
-            FloatingScreenObject = FloatingScreen.CreateFloatingScreen(new Vector2(50, 10), true, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
+            FloatingScreenObject                 = FloatingScreen.CreateFloatingScreen(new Vector2(50, 10), true, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
             FloatingScreenObject.HighlightHandle = true;
-            FloatingScreenObject.HandleSide = FloatingScreen.Side.Right;
-            FloatingScreenObject.ShowHandle = false;
+            FloatingScreenObject.HandleSide      = FloatingScreen.Side.Right;
+            FloatingScreenObject.ShowHandle      = false;
             FloatingScreenObject.SetRootViewController(m_ClockViewController, ViewController.AnimationType.None);
 
             FloatingScreenObject.HandleGrabbed      += OnClockGrab;
@@ -85,6 +86,8 @@ namespace BeatSaberPlus_Clock.UI
             CP_SDK.ChatPlexSDK.OnGenericSceneChange -= OnGenericSceneChange;
             Clock.e_OnSettingEdited -= ApplySettings;
         }
+        #endregion
+        #region Events
         private void OnClockGrab(object p_Sender, FloatingScreenHandleEventArgs p_EventArgs)
         {
             if (!CConfig.Instance.GetActiveConfig().EnableAnchors) return;
@@ -109,7 +112,6 @@ namespace BeatSaberPlus_Clock.UI
                     l_NewRotation = l_Current.transform.localRotation.eulerAngles;
                     FloatingScreenObject.transform.localPosition = l_NewPosition;
                     FloatingScreenObject.transform.localRotation = Quaternion.Euler(l_NewRotation);
-
                 }
             }
 
@@ -117,11 +119,11 @@ namespace BeatSaberPlus_Clock.UI
 
             switch (Clock.m_MovementMode)
             {
-                case BeatSaberPlus.SDK.Game.Logic.SceneType.Menu:
+                case Logic.SceneType.Menu:
                     CConfig.Instance.GetActiveConfig().MenuClockPosition = l_NewPosition;
                     CConfig.Instance.GetActiveConfig().MenuClockRotationEuler = l_NewRotation;
                     break;
-                case BeatSaberPlus.SDK.Game.Logic.SceneType.Playing:
+                case Logic.SceneType.Playing:
                     CConfig.Instance.GetActiveConfig().GameClockPosition = l_NewPosition;
                     CConfig.Instance.GetActiveConfig().GameClockRotationEuler = l_NewRotation;
                     break;
@@ -179,22 +181,32 @@ namespace BeatSaberPlus_Clock.UI
         }
         #endregion
 
+
         #region Clock
-        public void Update()
+        private IEnumerator ManualLateUpdate()
         {
-            m_DayTime += (Time.realtimeSinceStartup - m_LastUpdate);
+            float l_TimeSinceStartup = Time.realtimeSinceStartup;
+            m_DayTime += (l_TimeSinceStartup - m_LastUpdate);
             m_DayTime %= DAY_DURATION;
-            m_LastUpdate = Time.realtimeSinceStartup;
+            m_LastUpdate = l_TimeSinceStartup;
 
             int l_Hours = (int)(m_DayTime / HOUR);
             int l_Minutes = (int)((m_DayTime - (l_Hours * HOUR)) / MINUTE);
             int l_Seconds = (int)((m_DayTime - ((l_Hours * HOUR) + (l_Minutes * MINUTE))));
 
+            //Logger.Instance.Info(l_Seconds.ToString());
+
             if (l_Seconds == m_LastUpdateSecond)
-                return;
+                yield break;
 
             m_LastUpdateSecond = l_Seconds;
             m_ClockViewController.ApplyTime(l_Hours, l_Minutes, l_Seconds);
+            yield return null;
+        }
+
+        public void LateUpdate()
+        {
+            StartCoroutine(ManualLateUpdate());
         }
         #endregion
     }
