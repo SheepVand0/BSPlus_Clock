@@ -537,14 +537,16 @@ namespace BeatSaberPlus_Clock.UI
             switch ((string)p_Value)
             {
                 case "Game":
+                    if (LoadEnvironment() == false) { m_ClockMovementMode.Value = "Menu"; m_ClockMovementMode.ApplyValue(); return; }
+
                     Clock.m_MovementMode = BeatSaberPlus.SDK.Game.Logic.SceneType.Playing;
                     ClockFloatingScreen.Instance.SetClockPositionByScene(BeatSaberPlus.SDK.Game.Logic.SceneType.Playing);
-
                     break;
                 case "Menu":
+                    UnloadEnvironment();
+
                     Clock.m_MovementMode = BeatSaberPlus.SDK.Game.Logic.SceneType.Menu;
                     ClockFloatingScreen.Instance.SetClockPositionByScene(BeatSaberPlus.SDK.Game.Logic.SceneType.Menu);
-
                     break;
                 default:
                     Logger.Instance.Error("Not Valid movement selected");
@@ -592,29 +594,49 @@ namespace BeatSaberPlus_Clock.UI
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
-        private void LoadEnvironment(Action p_Callback = null)
+        private bool LoadEnvironment(Action p_Callback = null)
         {
+
+            //var l_MapSelectionViewController = Resources.FindObjectsOfTypeAll<LevelSelectionNavigationController>().First();
+            StandardLevelDetailViewController l_DetailViewController = null;
+
+            l_DetailViewController = Resources.FindObjectsOfTypeAll<StandardLevelDetailViewController>().First();
+
+            if (l_DetailViewController.beatmapLevel == null || l_DetailViewController.selectedDifficultyBeatmap == null) { ShowMessageModal("Please go to solo menu before using this functionnality"); return false; }
 
             var l_GameSceneManager = Resources.FindObjectsOfTypeAll<GameScenesManager>().FirstOrDefault();
             var l_MainSettings = Resources.FindObjectsOfTypeAll<SettingsFlowCoordinator>().FirstOrDefault();
 
             l_GameSceneManager.MarkSceneAsPersistent("MenuCore");
 
-            var l_TutorialSceneSetup = Resources.FindObjectsOfTypeAll<MenuTransitionsHelper>().FirstOrDefault().GetField<TutorialScenesTransitionSetupDataSO, MenuTransitionsHelper>("_tutorialScenesTransitionSetupData");
-            l_TutorialSceneSetup.Init(Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault().playerData.playerSpecificSettings);
+//            var l_TutorialSceneSetup = Resources.FindObjectsOfTypeAll<MenuTransitionsHelper>().FirstOrDefault().GetField<TutorialScenesTransitionSetupDataSO, MenuTransitionsHelper>("_tutorialScenesTransitionSetupData");
+            var l_TutorialSceneSetup = Resources.FindObjectsOfTypeAll<MenuTransitionsHelper>().FirstOrDefault().GetField<StandardLevelScenesTransitionSetupDataSO, MenuTransitionsHelper>("_standardLevelScenesTransitionSetupData");
+
+            var l_PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModel>().First().playerData;
+
+            l_TutorialSceneSetup.Init("Standard", l_DetailViewController.selectedDifficultyBeatmap, l_DetailViewController.beatmapLevel, l_PlayerData.overrideEnvironmentSettings,
+                l_PlayerData.colorSchemesSettings.GetSelectedColorScheme(), l_PlayerData.gameplayModifiers, l_PlayerData.playerSpecificSettings, l_PlayerData.practiceSettings, "No");
 
             var l_MenuEnvironmentManager = Resources.FindObjectsOfTypeAll<MenuEnvironmentManager>().FirstOrDefault();
             l_MenuEnvironmentManager.ShowEnvironmentType(MenuEnvironmentManager.MenuEnvironmentType.None);
 
-            Transform l_Tutorial = GameObject.Find("TutorialGameplay").transform;
-
             l_GameSceneManager.PushScenes(l_TutorialSceneSetup, 0.25f, null, (_) =>
             {
+                //Resources.FindObjectsOfTypeAll<BeatSaberPlus.UI.MainViewFlowCoordinator>().FirstOrDefault().SetField("showBackButton", false);
+
+                Transform l_Gameplay = GameObject.Find("StandardGameplay").transform;
+
                 l_MenuEnvironmentManager.transform.root.gameObject.SetActive(true);
 
                 Resources.FindObjectsOfTypeAll<MenuShockwave>().FirstOrDefault().gameObject.SetActive(false);
 
                 Resources.FindObjectsOfTypeAll<SongPreviewPlayer>().FirstOrDefault().CrossfadeToDefault();
+
+                GameObject.Find("NarrowGameHUD").gameObject.SetActive(false);
+
+                var l_CountersPlus = IPA.Loader.PluginManager.GetPluginFromId("Counters+");
+                if (l_CountersPlus != null)
+                    GameObject.Find("Counters+ | Main Canvas");
 
                 if (!Environment.GetCommandLineArgs().Any(p_Arg => p_Arg.ToLowerInvariant() == "fpfc"))
                 {
@@ -623,12 +645,15 @@ namespace BeatSaberPlus_Clock.UI
                     GameObject.Find("ControllerRight").gameObject.SetActive(true);
                 } else
                 {
-                    foreach (Transform l_Child in l_Tutorial)
+
+                    foreach (Transform l_Child in l_Gameplay)
                         l_Child.gameObject.SetActive(false);
                 }
 
                 p_Callback?.Invoke();
             });
+
+            return true;
         }
 
         private void UnloadEnvironment()
@@ -636,11 +661,13 @@ namespace BeatSaberPlus_Clock.UI
             GameScenesManager l_ScenesManager = Resources.FindObjectsOfTypeAll<GameScenesManager>().FirstOrDefault();
             l_ScenesManager.PopScenes(0.25f, null, (_) =>
             {
+                //Resources.FindObjectsOfTypeAll<BeatSaberPlus.UI.MainViewFlowCoordinator>().FirstOrDefault().SetField("showBackButton", true);
                 HashSet<string> l_Scenes = l_ScenesManager.GetField<HashSet<string>, GameScenesManager>("_neverUnloadScenes");
                 l_Scenes.Remove("MenuCore");
                 l_ScenesManager.SetField("_neverUnloadScenes", l_Scenes);
                 Resources.FindObjectsOfTypeAll<FadeInOutController>().FirstOrDefault().FadeIn();
                 Resources.FindObjectsOfTypeAll<SongPreviewPlayer>().FirstOrDefault().CrossfadeToDefault();
+                Resources.FindObjectsOfTypeAll<MenuEnvironmentManager>().First().ShowEnvironmentType(MenuEnvironmentManager.MenuEnvironmentType.Default);
             });
         }
 
