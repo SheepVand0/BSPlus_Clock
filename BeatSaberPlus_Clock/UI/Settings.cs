@@ -29,7 +29,7 @@ namespace BeatSaberPlus_Clock.UI
 
         #region UIComponents
         #region Tabs
-        [UIObject("Tabs")] GameObject m_Tabs = null;
+        [UIObject("Tabs")] private readonly GameObject m_Tabs = null;
 
         [UIObject("TabSelector")] GameObject m_TabSelector = null;
 

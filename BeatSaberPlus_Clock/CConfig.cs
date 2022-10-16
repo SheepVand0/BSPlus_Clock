@@ -102,18 +102,18 @@ namespace BeatSaberPlus_Clock
         }
     }
 
-    public struct Anchor
+    internal struct Anchor
     {
-        public Anchor(string p_Name, Vector3 p_Position, Vector3 p_RotationEuler, float p_Radius)
+        internal Anchor(string p_Name, Vector3 p_Position, Vector3 p_RotationEuler, float p_Radius)
         {
             AnchorName = p_Name;
             AnchorPosition = p_Position;
             AnchorRotationEuler = p_RotationEuler;
             AnchorRadius = p_Radius;
         }
-        public string AnchorName { get; set; }
-        public Vector3 AnchorPosition { get; set; }
-        public Vector3 AnchorRotationEuler { get; set; }
-        public float AnchorRadius { get; set; }
+        internal string AnchorName { get; set; }
+        internal Vector3 AnchorPosition { get; set; }
+        internal Vector3 AnchorRotationEuler { get; set; }
+        internal float AnchorRadius { get; set; }
     }
 }

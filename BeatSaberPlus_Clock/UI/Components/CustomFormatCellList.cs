@@ -20,11 +20,11 @@ namespace BeatSaberPlus_Clock.UI.Components
 
         [UIValue("FormatSettingValue")] private string SelectedFormat { get => string.Empty; set => ApplyFormatSettingOnconfig(value); }
 
-        public string ValueName { get; set; }
+        internal string ValueName { get; set; }
 
         private int ValueIndex { get; set; }
 
-        public FormatSetting(CustomFormatCellList p_ParentList, string p_ValueName, int p_Index)
+        internal FormatSetting(CustomFormatCellList p_ParentList, string p_ValueName, int p_Index)
         {
             m_ParentList = p_ParentList;
             ValueName = p_ValueName;
@@ -109,7 +109,7 @@ namespace BeatSaberPlus_Clock.UI.Components
 
     internal class CustomFormatCellList : CustomUIComponent
     {
-        public override string GetResourceName()
+        internal override string GetResourceName()
         {
             return $"{Plugin.AssemblyName}.UI.Components.Views.{GetType().Name}.bsml";
         }
@@ -119,7 +119,7 @@ namespace BeatSaberPlus_Clock.UI.Components
 
         [UIValue("FormatSettings")] List<object> m_ListContent = new List<object>();
 
-        public CustomKeyboard m_Keyboard = null;
+        internal CustomKeyboard m_Keyboard = null;
 
         private Button m_AddButton = null;
 
@@ -138,7 +138,7 @@ namespace BeatSaberPlus_Clock.UI.Components
             LoadFromConfig();
         }
 
-        public void LoadFromConfig()
+        internal void LoadFromConfig()
         {
             List<string> l_FormatOrder = CConfig.Instance.GetActiveConfig().FormatOrder;
             m_ListContent.Clear();

@@ -10,15 +10,15 @@ namespace BeatSaberPlus_Clock.GameObjects
 {
     class Anchor : MonoBehaviour
     {
-        public const float DEFAULT_RADIUS = 0.4f;
+        internal const float DEFAULT_RADIUS = 0.4f;
 
         GameObject m_Sphere;
 
-        public float m_Radius = 1.0f;
+        internal float m_Radius = 1.0f;
 
-        public static Material m_AnchorMaterial;
+        internal static Material m_AnchorMaterial;
 
-        public static Anchor CreateAnchor(Vector3 p_Position, Vector3 p_RotationEuler, float p_Radius)
+        internal static Anchor CreateAnchor(Vector3 p_Position, Vector3 p_RotationEuler, float p_Radius)
         {
             if (m_AnchorMaterial == null) {
                 AssetBundle l_Bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"{Plugin.AssemblyName}.Bundle.bspclockbundle"));
@@ -32,7 +32,7 @@ namespace BeatSaberPlus_Clock.GameObjects
             return l_Anchor;
         }
 
-        public static void DestroysAnchors()
+        internal static void DestroysAnchors()
         {
             foreach (Anchor l_Current in Resources.FindObjectsOfTypeAll<Anchor>())
             {
@@ -41,7 +41,7 @@ namespace BeatSaberPlus_Clock.GameObjects
             }
         }
 
-        public void SetPosition(Vector3 p_Position, Vector3 p_RotationEuler)
+        internal void SetPosition(Vector3 p_Position, Vector3 p_RotationEuler)
         {
             m_Sphere.transform.localPosition = p_Position;
             m_Sphere.transform.localRotation = Quaternion.Euler(p_RotationEuler);
@@ -50,7 +50,7 @@ namespace BeatSaberPlus_Clock.GameObjects
             transform.localRotation = Quaternion.Euler(p_RotationEuler);
         }
 
-        public void Awake()
+        internal void Awake()
         {
             m_Sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
             MeshRenderer l_Renderer = m_Sphere.GetComponent<MeshRenderer>();

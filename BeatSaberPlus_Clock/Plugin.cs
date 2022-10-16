@@ -9,7 +9,7 @@ namespace BeatSaberPlus_Clock
     /// Main plugin class
     /// </summary>
     [Plugin(RuntimeOptions.SingleStartInit)]
-    public class Plugin
+    internal class Plugin
     {
         /// <summary>
         /// Plugin instance
@@ -31,7 +31,7 @@ namespace BeatSaberPlus_Clock
         /// </summary>
         /// <param name="p_Logger">Logger instance</param>
         [Init]
-        public Plugin(IPA.Logging.Logger p_Logger)
+        internal Plugin(IPA.Logging.Logger p_Logger)
         {
             /// Set instance
             Instance = this;
@@ -47,7 +47,7 @@ namespace BeatSaberPlus_Clock
         /// On BeatSaberPlus_Online enable
         /// </summary>
         [OnStart]
-        public void OnApplicationStart()
+        internal void OnApplicationStart()
         {
             //m_Harmony.PatchAll();
         }
@@ -55,7 +55,7 @@ namespace BeatSaberPlus_Clock
         /// On BeatSaberPlus_Online disable
         /// </summary>
         [OnExit]
-        public void OnApplicationQuit()
+        internal void OnApplicationQuit()
         {
         }
     }

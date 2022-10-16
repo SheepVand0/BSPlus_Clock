@@ -18,7 +18,7 @@ namespace BeatSaberPlus_Clock.UI
             return "<bg><vertical><text id='ClockText' text='Clock'/></vertical></bg>";
         }
 
-        public void ApplySettings(CConfig.ClockConfig p_Config)
+        internal void ApplySettings(CConfig.ClockConfig p_Config)
         {
             if (m_ClockText == null) return;
 
@@ -58,7 +58,7 @@ namespace BeatSaberPlus_Clock.UI
             //m_ClockText.UpdateFontAsset();
         }
 
-        public void ApplyTime(int p_Hours, int p_Minutes, int p_Seconds)
+        internal void ApplyTime(int p_Hours, int p_Minutes, int p_Seconds)
         {
             List<string> l_Format = CConfig.Instance.GetActiveConfig().FormatOrder;
             m_ClockText.text = string.Empty;

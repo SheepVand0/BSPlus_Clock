@@ -10,7 +10,7 @@ namespace BeatSaberPlus_Clock.UI.Components
 {
     internal class CustomKeyboard : CustomUIComponent
     {
-        public override string GetResourceName()
+        internal override string GetResourceName()
         {
             return $"{Plugin.AssemblyName}.UI.Components.Views.{GetType().Name}.bsml";
         }
@@ -18,11 +18,11 @@ namespace BeatSaberPlus_Clock.UI.Components
         [UIComponent("KeyboardModal")] ModalKeyboard m_ModalKeyboard = null;
         [UIValue("InputKeyboardValue")] private string m_KeyboardValue { get => string.Empty; set { EnterPressed(value); } }
 
-        public event Action<string, string> OnKeyboardEnterPressed;
+        internal event Action<string, string> OnKeyboardEnterPressed;
 
-        public string m_OldValue;
+        internal string m_OldValue;
 
-        public void Open(string p_OpenText)
+        internal void Open(string p_OpenText)
         {
             m_ModalKeyboard.modalView.Show(true, true);
             m_ModalKeyboard.SetText(p_OpenText);

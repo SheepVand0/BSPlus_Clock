@@ -24,27 +24,28 @@ namespace BeatSaberPlus_Clock.UI
         private int m_LastUpdateSecond = -1;
         private ClockViewController m_ClockViewController = null;
 
-        public static readonly List<Anchor> m_Anchors = new List<Anchor>() {
+        internal static Font ClockFont = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+
+        internal static readonly List<Anchor> m_Anchors = new List<Anchor>() {
             new Anchor("Anchor_1", new Vector3(0, 2.7f, 3.87f), new Vector3(-10, 0, 0), GameObjects.Anchor.DEFAULT_RADIUS),
             new Anchor("Anchor_2", new Vector3(0, 0.4f, 3.85f), new Vector3(20, 0, 0), GameObjects.Anchor.DEFAULT_RADIUS),
             new Anchor("Anchor_3", new Vector3(4.28f, 1.43f, 3.8f), new Vector3(0, 60, 0), GameObjects.Anchor.DEFAULT_RADIUS),
             new Anchor("Anchor_4", new Vector3(-4.28f, 1.43f, 3.8f), new Vector3(0, -60, 0), GameObjects.Anchor.DEFAULT_RADIUS)
         };
 
-        internal static Font ClockFont = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
         #endregion
 
         #region Static
-        public static ClockFloatingScreen Instance;
+        internal static ClockFloatingScreen Instance = null;
 
-        public static ClockFloatingScreen CreateClock()
+        internal static ClockFloatingScreen CreateClock()
         {
             if (Instance != null) { Logger.Instance.Error("An instance of the clock already exist not creating"); return null; }
             ClockFloatingScreen l_Clock = new GameObject("BeatSaberPlusClockFloatingSceen").AddComponent<ClockFloatingScreen>();
             return l_Clock;
         }
 
-        public static void DestroyClock()
+        internal static void DestroyClock()
         {
             Instance.Destroy();
             Instance = null;
@@ -156,7 +157,7 @@ namespace BeatSaberPlus_Clock.UI
         #endregion
 
         #region Transform
-        public void SetClockPositionByScene(Logic.SceneType p_SceneType)
+        internal void SetClockPositionByScene(Logic.SceneType p_SceneType)
         {
             switch (p_SceneType)
             {
@@ -172,14 +173,14 @@ namespace BeatSaberPlus_Clock.UI
             }
         }
 
-        public void SetScale(float p_Width)
+        internal void SetScale(float p_Width)
         {
             FloatingScreenObject.ScreenSize = new Vector2(p_Width, FloatingScreenObject.ScreenSize.y);
         }
         #endregion
 
         #region Style
-        public void ApplySettings()
+        internal void ApplySettings()
         {
             FloatingScreenObject.ShowHandle = CConfig.Instance.GetActiveConfig().EnableClockGrabbing;
             m_ClockViewController.ApplySettings(CConfig.Instance.GetActiveConfig());
@@ -198,8 +199,6 @@ namespace BeatSaberPlus_Clock.UI
             int l_Minutes = (int)((m_DayTime - (l_Hours * HOUR)) / MINUTE);
             int l_Seconds = (int)((m_DayTime - ((l_Hours * HOUR) + (l_Minutes * MINUTE))));
 
-            //Logger.Instance.Info(l_Seconds.ToString());
-
             if (l_Seconds == m_LastUpdateSecond)
                 yield break;
 
@@ -208,7 +207,7 @@ namespace BeatSaberPlus_Clock.UI
             yield return null;
         }
 
-        public void LateUpdate()
+        private void LateUpdate()
         {
             StartCoroutine(ManualLateUpdate());
         }

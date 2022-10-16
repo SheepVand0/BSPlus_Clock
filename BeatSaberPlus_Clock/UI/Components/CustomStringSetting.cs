@@ -12,7 +12,7 @@ namespace BeatSaberPlus_Clock.UI.Components
 {
     internal class CustomStringSetting : CustomUIComponent
     {
-        public override string GetResourceName()
+        internal override string GetResourceName()
         {
             return $"{Plugin.AssemblyName}.UI.Components.Views.{GetType().Name}.bsml";
         }
@@ -25,18 +25,18 @@ namespace BeatSaberPlus_Clock.UI.Components
 
         CustomKeyboard m_Keyboard = null;
 
-        public event Action<string> OnChange;
+        internal event Action<string> OnChange;
 
-        public int StringSettingMaxCharacters { get; private set; }
-        public string Text { get; set; }
+        internal int StringSettingMaxCharacters { get; private set; }
+        internal string Text { get; set; }
 
-        public void SetValue(string p_Value)
+        internal void SetValue(string p_Value)
         {
             Text = p_Value;
             m_PreviewText.text = p_Value;
         }
 
-        public void Setup(string p_InitialValue, int p_MaxCharacter, bool p_RecreateNewKeyboard, CustomKeyboard p_Keyboard = null)
+        internal void Setup(string p_InitialValue, int p_MaxCharacter, bool p_RecreateNewKeyboard, CustomKeyboard p_Keyboard = null)
         {
             BeatSaberPlus.SDK.UI.Backgroundable.SetOpacity(m_HorizontalLayout.gameObject, 0.4f);
 
@@ -56,12 +56,12 @@ namespace BeatSaberPlus_Clock.UI.Components
             m_PreviewText.text = Text;
         }
 
-        public void OpenKeyboard()
+        internal void OpenKeyboard()
         {
             m_Keyboard.Open(Text);
         }
 
-        public void ApplyValue(string p_Value)
+        internal void ApplyValue(string p_Value)
         {
             Text = p_Value;
             m_PreviewText.text = ClockUtils.CutString(p_Value, StringSettingMaxCharacters);
