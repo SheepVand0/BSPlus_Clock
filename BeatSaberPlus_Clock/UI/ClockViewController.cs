@@ -55,7 +55,7 @@ namespace BeatSaberPlus_Clock.UI
             for (int l_I = 0; l_I < l_Config.FormatOrder.Count; ++l_I)
             {
                 if (l_I != 0)
-                    m_ClockText.text += l_Config.Separator;
+                    l_Text += l_Config.Separator;
 
                 var l_FormatPart = l_Config.FormatOrder[l_I];
                 switch (l_FormatPart)
