@@ -1,7 +1,4 @@
 ﻿using IPA;
-using UnityEngine;
-using BeatSaberMarkupLanguage;
-using HarmonyLib;
 
 namespace BeatSaberPlus_Clock
 {
@@ -11,18 +8,8 @@ namespace BeatSaberPlus_Clock
     [Plugin(RuntimeOptions.SingleStartInit)]
     internal class Plugin
     {
-        /// <summary>
-        /// Plugin instance
-        /// </summary>
-        internal static Plugin Instance { get; private set; }
-        /// <summary>
-        /// Custom logo texture
-        /// </summary>
-        internal static Texture2D CustomLogoTexture = null;/*Utilities.FindTextureInAssembly($"{ResourcesPath}.SheepPrise.png");*/
-
         internal static string AssemblyName = "BeatSaberPlus_Clock";
-        internal static string ResourcesPath = $"{AssemblyName}.Resources";
-        //private static Harmony m_Harmony = new Harmony("fr.beatsaberplus.sheepvand.clock");
+
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
@@ -33,30 +20,28 @@ namespace BeatSaberPlus_Clock
         [Init]
         internal Plugin(IPA.Logging.Logger p_Logger)
         {
-            /// Set instance
-            Instance = this;
-
             /// Setup logger
-            Logger.Instance = p_Logger;
+            Logger.Instance = new CP_SDK.Logging.IPALogger(p_Logger);
         }
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
-        /// On BeatSaberPlus_Online enable
+        /// On BeatSaberPlus enable
         /// </summary>
-        [OnStart]
-        internal void OnApplicationStart()
+        [OnEnable]
+        public void OnEnable()
         {
-            //m_Harmony.PatchAll();
+
         }
         /// <summary>
-        /// On BeatSaberPlus_Online disable
+        /// On BeatSaberPlus disable
         /// </summary>
-        [OnExit]
-        internal void OnApplicationQuit()
+        [OnDisable]
+        public void OnDisable()
         {
+
         }
     }
 }

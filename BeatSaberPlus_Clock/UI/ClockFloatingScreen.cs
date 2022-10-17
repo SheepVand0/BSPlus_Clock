@@ -1,13 +1,11 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.FloatingScreen;
-using UnityEngine;
-using TMPro;
-using System;
 using BeatSaberPlus.SDK.Game;
 using HMUI;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace BeatSaberPlus_Clock.UI
 {
@@ -26,11 +24,11 @@ namespace BeatSaberPlus_Clock.UI
 
         internal static Font ClockFont = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
 
-        internal static readonly List<Anchor> m_Anchors = new List<Anchor>() {
-            new Anchor("Anchor_1", new Vector3(0, 2.7f, 3.87f), new Vector3(-10, 0, 0), GameObjects.Anchor.DEFAULT_RADIUS),
-            new Anchor("Anchor_2", new Vector3(0, 0.4f, 3.85f), new Vector3(20, 0, 0), GameObjects.Anchor.DEFAULT_RADIUS),
-            new Anchor("Anchor_3", new Vector3(4.28f, 1.43f, 3.8f), new Vector3(0, 60, 0), GameObjects.Anchor.DEFAULT_RADIUS),
-            new Anchor("Anchor_4", new Vector3(-4.28f, 1.43f, 3.8f), new Vector3(0, -60, 0), GameObjects.Anchor.DEFAULT_RADIUS)
+        internal static readonly List<Components.Anchor.Settings> m_Anchors = new List<Components.Anchor.Settings>() {
+            new Components.Anchor.Settings("Anchor_1", new Vector3( 0.00f, 2.70f, 3.87f), new Vector3(-10,   0, 0), Components.Anchor.DEFAULT_RADIUS),
+            new Components.Anchor.Settings("Anchor_2", new Vector3( 0.00f, 0.40f, 3.85f), new Vector3( 20,   0, 0), Components.Anchor.DEFAULT_RADIUS),
+            new Components.Anchor.Settings("Anchor_3", new Vector3( 4.28f, 1.43f, 3.80f), new Vector3(  0,  60, 0), Components.Anchor.DEFAULT_RADIUS),
+            new Components.Anchor.Settings("Anchor_4", new Vector3(-4.28f, 1.43f, 3.80f), new Vector3(  0, -60, 0), Components.Anchor.DEFAULT_RADIUS)
         };
 
         #endregion
@@ -99,7 +97,7 @@ namespace BeatSaberPlus_Clock.UI
             if (!CConfig.Instance.GetActiveConfig().EnableAnchors) return;
 
             foreach (var l_Current in m_Anchors)
-                GameObjects.Anchor.CreateAnchor(l_Current.AnchorPosition, l_Current.AnchorRotationEuler, l_Current.AnchorRadius);
+                BeatSaberPlus_Clock.Components.Anchor.CreateAnchor(l_Current.Position, l_Current.RotationEuler, l_Current.Radius);
         }
 
         private void OnClockRelease(object p_Sender, FloatingScreenHandleEventArgs p_EventArgs)
@@ -109,7 +107,7 @@ namespace BeatSaberPlus_Clock.UI
 
             if (CConfig.Instance.GetActiveConfig().EnableAnchors)
             {
-                GameObjects.Anchor[] l_Anchors = Resources.FindObjectsOfTypeAll<GameObjects.Anchor>();
+                BeatSaberPlus_Clock.Components.Anchor[] l_Anchors = Resources.FindObjectsOfTypeAll<BeatSaberPlus_Clock.Components.Anchor>();
                 foreach (var l_Current in l_Anchors)
                 {
                     if (ClockUtils.Vector3Distance(l_Current.transform.position, p_EventArgs.Position) > l_Current.m_Radius) continue;
@@ -121,7 +119,7 @@ namespace BeatSaberPlus_Clock.UI
                 }
             }
 
-            GameObjects.Anchor.DestroysAnchors();
+            BeatSaberPlus_Clock.Components.Anchor.DestroysAnchors();
 
             switch (Clock.m_MovementMode)
             {

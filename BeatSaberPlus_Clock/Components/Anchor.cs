@@ -1,16 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using System.Reflection;
+using UnityEngine;
 
-namespace BeatSaberPlus_Clock.GameObjects
+namespace BeatSaberPlus_Clock.Components
 {
-    class Anchor : MonoBehaviour
+    public class Anchor : MonoBehaviour
     {
+        public struct Settings
+        {
+            public string   Name            { get; set; }
+            public Vector3  Position        { get; set; }
+            public Vector3  RotationEuler   { get; set; }
+            public float    Radius          { get; set; }
+
+            ////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////
+
+            public Settings(string p_Name, Vector3 p_Position, Vector3 p_RotationEuler, float p_Radius)
+            {
+                Name            = p_Name;
+                Position        = p_Position;
+                RotationEuler   = p_RotationEuler;
+                Radius          = p_Radius;
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
         internal const float DEFAULT_RADIUS = 0.4f;
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
 
         GameObject m_Sphere;
 

@@ -27,11 +27,11 @@ namespace BeatSaberPlus_Clock
 
             [JsonProperty] internal string ProfileName = "Default";
 
-            [JsonProperty] internal Vector3 MenuClockPosition = ClockFloatingScreen.m_Anchors[0].AnchorPosition;
-            [JsonProperty] internal Vector3 GameClockPosition = ClockFloatingScreen.m_Anchors[0].AnchorPosition;
+            [JsonProperty] internal Vector3 MenuClockPosition = ClockFloatingScreen.m_Anchors[0].Position;
+            [JsonProperty] internal Vector3 GameClockPosition = ClockFloatingScreen.m_Anchors[0].Position;
 
-            [JsonProperty] internal Vector3 MenuClockRotationEuler = ClockFloatingScreen.m_Anchors[0].AnchorRotationEuler;
-            [JsonProperty] internal Vector3 GameClockRotationEuler = ClockFloatingScreen.m_Anchors[0].AnchorRotationEuler;
+            [JsonProperty] internal Vector3 MenuClockRotationEuler = ClockFloatingScreen.m_Anchors[0].RotationEuler;
+            [JsonProperty] internal Vector3 GameClockRotationEuler = ClockFloatingScreen.m_Anchors[0].RotationEuler;
 
             [JsonProperty] internal bool EnableClockGrabbing = false;
             [JsonProperty] internal bool EnableAnchors       = false;
@@ -100,20 +100,5 @@ namespace BeatSaberPlus_Clock
             if (Profiles.ElementAt(SelectedProfileIndex) == null)
                 SelectedProfileIndex = 0;
         }
-    }
-
-    internal struct Anchor
-    {
-        internal Anchor(string p_Name, Vector3 p_Position, Vector3 p_RotationEuler, float p_Radius)
-        {
-            AnchorName = p_Name;
-            AnchorPosition = p_Position;
-            AnchorRotationEuler = p_RotationEuler;
-            AnchorRadius = p_Radius;
-        }
-        internal string AnchorName { get; set; }
-        internal Vector3 AnchorPosition { get; set; }
-        internal Vector3 AnchorRotationEuler { get; set; }
-        internal float AnchorRadius { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using HMUI;
 
-namespace BeatSaberPlus_Clock.UI.Components
+namespace BeatSaberPlus_Clock.UI.Widgets
 {
     internal class CustomKeyboard : CustomUIComponent
     {

@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-namespace BeatSaberPlus_Clock.UI.Components
+namespace BeatSaberPlus_Clock.UI.Widgets
 {
     internal class CustomStringSetting : CustomUIComponent
     {

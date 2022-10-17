@@ -88,7 +88,7 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\common\Beat Saber\Libs\Newtonsoft.Json.dll</HintPath>
+      <HintPath>D:\SteamLibrary\steamapps\common\Beat Saber\Libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SiraUtil">
       <HintPath>$(BeatSaberDir)\Plugins\SiraUtil.dll</HintPath>
@@ -185,22 +185,22 @@
     <Compile Include="CConfig.cs" />
     <EmbeddedResource Include="Bundle\bspclockbundle" />
     <None Include="Directory.Build.props" />
-    <Compile Include="GameObjects\Anchor.cs" />
+    <Compile Include="Components\Anchor.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Clock.cs" />
     <Compile Include="UI\ClockFloatingScreen.cs" />
     <Compile Include="UI\ClockViewController.cs" />
-    <Compile Include="UI\Components\CustomFormatCellList.cs" />
-    <Compile Include="UI\Components\CustomKeyboard.cs" />
-    <Compile Include="UI\Components\CustomStringSetting.cs" />
+    <Compile Include="UI\Widgets\CustomFormatCellList.cs" />
+    <Compile Include="UI\Widgets\CustomKeyboard.cs" />
+    <Compile Include="UI\Widgets\CustomStringSetting.cs" />
     <Compile Include="UI\CustomUIComponent.cs" />
     <Compile Include="UI\Settings.cs" />
     <Compile Include="Utils\Utils.cs" />
-    <EmbeddedResource Include="UI\Components\Views\CustomFormatCellList.bsml" />
-    <EmbeddedResource Include="UI\Components\Views\CustomStringSetting.bsml" />
-    <EmbeddedResource Include="UI\Components\Views\CustomKeyboard.bsml" />
+    <EmbeddedResource Include="UI\Widgets\Views\CustomFormatCellList.bsml" />
+    <EmbeddedResource Include="UI\Widgets\Views\CustomStringSetting.bsml" />
+    <EmbeddedResource Include="UI\Widgets\Views\CustomKeyboard.bsml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using BeatSaberMarkupLanguage.Components;
 
-namespace BeatSaberPlus_Clock.UI.Components
+namespace BeatSaberPlus_Clock.UI.Widgets
 {
     internal class FormatSetting
     {

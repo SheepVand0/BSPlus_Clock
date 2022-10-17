@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using BeatSaberMarkupLanguage.Components;
-using BeatSaberPlus_Clock.UI.Components;
+using BeatSaberPlus_Clock.UI.Widgets;
 using BeatSaberPlus_Clock;
 using System.Collections.Generic;
 using System.Linq;
