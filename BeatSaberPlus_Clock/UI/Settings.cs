@@ -571,7 +571,7 @@ namespace BeatSaberPlus_Clock.UI
         internal void UpdateFontsList()
         {
             List<object> l_NewFonts = new List<object>();
-            foreach (Font l_Current in Clock.m_AvailableFonts)
+            foreach (var l_Current in Clock.m_AvailableFonts)
                 l_NewFonts.Add(l_Current.name);
             m_Fonts = l_NewFonts;
             m_FontDropdown.dropdown.ReloadData();

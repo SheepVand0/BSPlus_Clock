@@ -90,7 +90,6 @@ namespace BeatSaberPlus_Clock
         /// <param name="p_OnCreation">On creation</param>
         protected override void OnInit(bool p_OnCreation)
         {
-            Save();
             if (Profiles.Count == 0)
             {
                 Profiles.Add(new ClockConfig("Default"));
@@ -99,6 +98,8 @@ namespace BeatSaberPlus_Clock
 
             if (Profiles.ElementAt(SelectedProfileIndex) == null)
                 SelectedProfileIndex = 0;
+
+            Save();
         }
     }
 }

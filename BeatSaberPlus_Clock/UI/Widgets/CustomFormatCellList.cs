@@ -109,11 +109,6 @@ namespace BeatSaberPlus_Clock.UI.Widgets
 
     internal class CustomFormatCellList : CustomUIComponent
     {
-        internal override string GetResourceName()
-        {
-            return $"{Plugin.AssemblyName}.UI.Components.Views.{GetType().Name}.bsml";
-        }
-
         [UIObject("AddButtonTransform")] GameObject m_ButtonParent = null;
         [UIComponent("FormatSettingList")] CustomCellListTableData m_FormatSettingsList = null;
 

@@ -198,9 +198,6 @@
     <Compile Include="UI\CustomUIComponent.cs" />
     <Compile Include="UI\Settings.cs" />
     <Compile Include="Utils\Utils.cs" />
-    <EmbeddedResource Include="UI\Widgets\Views\CustomFormatCellList.bsml" />
-    <EmbeddedResource Include="UI\Widgets\Views\CustomStringSetting.bsml" />
-    <EmbeddedResource Include="UI\Widgets\Views\CustomKeyboard.bsml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
@@ -209,6 +206,15 @@
     <None Include="BuildTargets.targets" />
     <EmbeddedResource Include="UI\Settings.bsml">
       <DependentUpon>Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Widgets\CustomFormatCellList.bsml">
+      <DependentUpon>CustomFormatCellList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Widgets\CustomStringSetting.bsml">
+      <DependentUpon>CustomStringSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Widgets\CustomKeyboard.bsml">
+      <DependentUpon>CustomKeyboard.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

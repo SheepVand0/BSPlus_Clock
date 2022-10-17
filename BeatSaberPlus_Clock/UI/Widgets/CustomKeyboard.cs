@@ -5,16 +5,12 @@ using BeatSaberMarkupLanguage.ViewControllers;
 using System;
 using System.Collections.Generic;
 using HMUI;
+using System.Reflection;
 
 namespace BeatSaberPlus_Clock.UI.Widgets
 {
     internal class CustomKeyboard : CustomUIComponent
     {
-        internal override string GetResourceName()
-        {
-            return $"{Plugin.AssemblyName}.UI.Components.Views.{GetType().Name}.bsml";
-        }
-
         [UIComponent("KeyboardModal")] ModalKeyboard m_ModalKeyboard = null;
         [UIValue("InputKeyboardValue")] private string m_KeyboardValue { get => string.Empty; set { EnterPressed(value); } }
 

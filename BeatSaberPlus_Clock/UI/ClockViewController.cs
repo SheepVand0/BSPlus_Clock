@@ -1,11 +1,7 @@
-﻿using BeatSaberMarkupLanguage;
-using BeatSaberMarkupLanguage.Attributes;
-using System.Collections.Generic;
+﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberPlus.SDK.UI;
+using System.Collections.Generic;
 using TMPro;
-using System.Reflection;
-using IPA.Utilities;
-using UnityEngine;
 
 namespace BeatSaberPlus_Clock.UI
 {
@@ -48,14 +44,8 @@ namespace BeatSaberPlus_Clock.UI
             {
                 m_ClockText.color = p_Config.ClockColor;
             }
-
-            /*TMP_FontAsset l_Font = TMP_FontAsset.CreateFontAsset(ClockFloatingScreen.ClockFont);
-            m_ClockText.font = l_Font;
-            m_ClockText.fontSharedMaterial = l_Font.material;
-            m_ClockText.UpdateFontAsset();
-            m_ClockText.fontSharedMaterial.SetFloat(ShaderUtilities.ID_GlowPower, 1);*/
+            m_ClockText.font = ClockFloatingScreen.ClockFont;
             m_ClockText.fontSize = CConfig.Instance.GetActiveConfig().FontSize;
-            //m_ClockText.UpdateFontAsset();
         }
 
         internal void ApplyTime(int p_Hours, int p_Minutes, int p_Seconds)

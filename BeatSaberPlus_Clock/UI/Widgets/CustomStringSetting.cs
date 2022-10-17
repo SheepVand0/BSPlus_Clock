@@ -12,11 +12,6 @@ namespace BeatSaberPlus_Clock.UI.Widgets
 {
     internal class CustomStringSetting : CustomUIComponent
     {
-        internal override string GetResourceName()
-        {
-            return $"{Plugin.AssemblyName}.UI.Components.Views.{GetType().Name}.bsml";
-        }
-
         [UIObject("EditButtonTransform")] GameObject            m_EditButtonTransform = null;
         [UIComponent("HorizontalLayout")] HorizontalLayoutGroup m_HorizontalLayout    = null;
         [UIComponent("TextValuePreview")] TextMeshProUGUI       m_PreviewText         = null;

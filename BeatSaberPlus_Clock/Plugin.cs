@@ -6,7 +6,7 @@ namespace BeatSaberPlus_Clock
     /// Main plugin class
     /// </summary>
     [Plugin(RuntimeOptions.SingleStartInit)]
-    internal class Plugin
+    public class Plugin
     {
         internal static string AssemblyName = "BeatSaberPlus_Clock";
 
@@ -18,7 +18,7 @@ namespace BeatSaberPlus_Clock
         /// </summary>
         /// <param name="p_Logger">Logger instance</param>
         [Init]
-        internal Plugin(IPA.Logging.Logger p_Logger)
+        public Plugin(IPA.Logging.Logger p_Logger)
         {
             /// Setup logger
             Logger.Instance = new CP_SDK.Logging.IPALogger(p_Logger);

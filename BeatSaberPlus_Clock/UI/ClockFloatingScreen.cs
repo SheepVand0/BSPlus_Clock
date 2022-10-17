@@ -5,6 +5,7 @@ using HMUI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BeatSaberPlus_Clock.UI
@@ -22,7 +23,7 @@ namespace BeatSaberPlus_Clock.UI
         private int m_LastUpdateSecond = -1;
         private ClockViewController m_ClockViewController = null;
 
-        internal static Font ClockFont = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        internal static TMPro.TMP_FontAsset ClockFont = Resources.FindObjectsOfTypeAll<TMPro.TMP_FontAsset>().FirstOrDefault();
 
         internal static readonly List<Components.Anchor.Settings> m_Anchors = new List<Components.Anchor.Settings>() {
             new Components.Anchor.Settings("Anchor_1", new Vector3( 0.00f, 2.70f, 3.87f), new Vector3(-10,   0, 0), Components.Anchor.DEFAULT_RADIUS),

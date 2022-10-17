@@ -1,31 +1,17 @@
 ﻿using BeatSaberMarkupLanguage;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using BeatSaberPlus_Clock.UI;
 using System;
-using UnityEditor;
-using UnityEngine.UI;
-using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace BeatSaberPlus_Clock
 {
     /// <summary>
     /// Online instance
     /// </summary>
-    internal class Clock : BeatSaberPlus.SDK.BSPModuleBase<Clock>
+    public class Clock : BeatSaberPlus.SDK.BSPModuleBase<Clock>
     {
-        internal const string CLOCK_EXPORT_FOLDER        = "./UserData/BeatSaberPlus/Clock/Export/";
-
-        internal const string CLOCK_IMPORT_FOLDER        = "./UserData/BeatSaberPlus/Clock/Import/";
-
-        internal const string CLOCK_FONTS_FOLDER         =  "./UserData/BeatSaberPlus/Clock/Fonts";
-
-        internal const float  CLOCK_FONT_SIZE_MULTIPLIER = 0.34f;
-
-        internal const int    EVENT_PER_PAGES            = 10;
-
         /// <summary>
         /// Module type
         /// </summary>
@@ -37,7 +23,7 @@ namespace BeatSaberPlus_Clock
         /// <summary>
         /// Description of the Module
         /// </summary>
-        public override string Description => "A Clock";
+        public override string Description => "A clock";
         /// <summary>
         /// Is the Module using chat features
         /// </summary>
@@ -51,6 +37,19 @@ namespace BeatSaberPlus_Clock
         /// </summary>
         public override CP_SDK.EIModuleBaseActivationType ActivationType => CP_SDK.EIModuleBaseActivationType.OnMenuSceneLoaded;
 
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
+        internal const string CLOCK_EXPORT_FOLDER        = "./UserData/BeatSaberPlus/Clock/Export/";
+
+        internal const string CLOCK_IMPORT_FOLDER        = "./UserData/BeatSaberPlus/Clock/Import/";
+
+        internal const string CLOCK_FONTS_FOLDER         =  "./UserData/BeatSaberPlus/Clock/Fonts";
+
+        internal const float  CLOCK_FONT_SIZE_MULTIPLIER = 0.34f;
+
+        internal const int    EVENT_PER_PAGES            = 10;
+
         internal static BeatSaberPlus.SDK.Game.Logic.SceneType m_MovementMode = BeatSaberPlus.SDK.Game.Logic.SceneType.Menu;
 
         internal static event Action e_OnConfigLoaded;
@@ -59,7 +58,7 @@ namespace BeatSaberPlus_Clock
 
         internal static event Action e_OnFontsLoaded;
 
-        internal static List<Font> m_AvailableFonts = new List<Font>();
+        internal static List<TMPro.TMP_FontAsset> m_AvailableFonts = new List<TMPro.TMP_FontAsset>();
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
@@ -77,8 +76,8 @@ namespace BeatSaberPlus_Clock
         /// </summary>
         protected override void OnEnable()
         {
-            Clock.InvokeOnConfigLoaded();
             e_OnConfigLoaded += OnConfigLoaded;
+            Clock.InvokeOnConfigLoaded();
         }
 
         /// <summary>
@@ -92,6 +91,23 @@ namespace BeatSaberPlus_Clock
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// Get Module settings UI
+        /// </summary>
+        protected override (HMUI.ViewController, HMUI.ViewController, HMUI.ViewController) GetSettingsUIImplementation()
+        {
+            /// Create view if needed
+            if (m_SettingsView == null)
+                m_SettingsView = BeatSaberUI.CreateViewController<UI.Settings>();
+
+            /// Change main view
+            return (m_SettingsView, null, null);
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
         #region Events Invoking
         internal static void InvokeOnSettingChanged()
         {
@@ -121,29 +137,26 @@ namespace BeatSaberPlus_Clock
         internal static void LoadFonts()
         {
             m_AvailableFonts.Clear();
-            m_AvailableFonts.Add(Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font);
+
+            if (CP_SDK.Unity.FontManager.TryGetTMPFontByFamily("Arial", out var l_Arial))       m_AvailableFonts.Add(l_Arial);
+            if (CP_SDK.Unity.FontManager.TryGetTMPFontByFamily("Segoe UI", out var l_SegoeUI))  m_AvailableFonts.Add(l_SegoeUI);
 
             if (!System.IO.Directory.Exists(CLOCK_FONTS_FOLDER))
                 System.IO.Directory.CreateDirectory(CLOCK_FONTS_FOLDER);
 
             var l_FontsFiles = System.IO.Directory.GetFiles(Clock.CLOCK_FONTS_FOLDER, "*.ttf");
-
-            List<Font> l_Fonts = new List<Font>();
-
-            for (int l_i = 0;l_i < l_FontsFiles.Length;l_i++)
+            for (int l_I = 0; l_I < l_FontsFiles.Length; l_I++)
             {
-                m_AvailableFonts.Add(CP_SDK.Unity.FontManager.AddFontFile(l_FontsFiles[l_i]));
-
-                if (System.IO.Path.GetFileNameWithoutExtension(l_FontsFiles[l_i]) != CConfig.Instance.GetActiveConfig().FontName)
-                    continue;
-
-                ClockFloatingScreen.ClockFont = m_AvailableFonts[l_i];
+                if (CP_SDK.Unity.FontManager.AddFontFile(l_FontsFiles[l_I], out var l_FamilyName)
+                    && CP_SDK.Unity.FontManager.TryGetTMPFontByFamily(l_FamilyName, out var l_Font))
+                    m_AvailableFonts.Add(l_Font);
             }
 
-            if (m_AvailableFonts.Count == 1)
+            var l_ActiveFont = CConfig.Instance.GetActiveConfig().FontName;
+            if (!m_AvailableFonts.Any(x => x.name == l_ActiveFont) && m_AvailableFonts.Count > 0)
             {
                 ClockFloatingScreen.ClockFont = m_AvailableFonts[0];
-                CConfig.Instance.GetActiveConfig().FontName = "Arial";
+                CConfig.Instance.GetActiveConfig().FontName = m_AvailableFonts[0].name;
             }
 
             e_OnFontsLoaded?.Invoke();
@@ -175,21 +188,5 @@ namespace BeatSaberPlus_Clock
             InvokeOnSettingChanged();
         }
         #endregion
-
-        ////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////
-
-        /// <summary>
-        /// Get Module settings UI
-        /// </summary>
-        protected override (HMUI.ViewController, HMUI.ViewController, HMUI.ViewController) GetSettingsUIImplementation()
-        {
-            /// Create view if needed
-            if (m_SettingsView == null)
-                m_SettingsView = BeatSaberUI.CreateViewController<UI.Settings>();
-
-            /// Change main view
-            return (m_SettingsView, null, null);
-        }
     }
 }
