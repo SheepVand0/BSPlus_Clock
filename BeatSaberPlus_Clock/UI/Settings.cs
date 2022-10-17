@@ -182,7 +182,7 @@ namespace BeatSaberPlus_Clock.UI
                 p_Item.OnChange += OnSeparatorChange;
             });
             BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolSeparateDayHours, l_Event, CConfig.Instance.GetActiveConfig().SeparateDayHours, true);
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolAmPm,             l_Event, CConfig.Instance.GetActiveConfig().BoolAmPm, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolAmPm,             l_Event, CConfig.Instance.GetActiveConfig().ShowAmPm, true);
 
             BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_FontDropdown, l_FontDropdownEvent, true);
             Clock.e_OnFontsLoaded += OnFontsLoaded;
@@ -250,7 +250,7 @@ namespace BeatSaberPlus_Clock.UI
             m_EnableClockGrabbing.Value = CConfig.Instance.GetActiveConfig().EnableClockGrabbing;
             m_EnableAnchors.Value = CConfig.Instance.GetActiveConfig().EnableAnchors;
             m_BoolSeparateDayHours.Value = CConfig.Instance.GetActiveConfig().SeparateDayHours;
-            m_BoolAmPm.Value = CConfig.Instance.GetActiveConfig().BoolAmPm;
+            m_BoolAmPm.Value = CConfig.Instance.GetActiveConfig().ShowAmPm;
             m_StringElementsSeparator.SetValue(CConfig.Instance.GetActiveConfig().Separator);
             m_FormatSettingsList.LoadFromConfig();
             m_Slider_FontSize.Value = ((CConfig.Instance.GetActiveConfig().FontSize / 10) * 100 / 300) / Clock.CLOCK_FONT_SIZE_MULTIPLIER;
@@ -490,7 +490,7 @@ namespace BeatSaberPlus_Clock.UI
             l_Profile.EnableClockGrabbing   = m_EnableClockGrabbing.Value;
             l_Profile.EnableAnchors         = m_EnableAnchors.Value;
             l_Profile.SeparateDayHours      = m_BoolSeparateDayHours.Value;
-            l_Profile.BoolAmPm              = m_BoolAmPm.Value;
+            l_Profile.ShowAmPm              = m_BoolAmPm.Value;
             l_Profile.Separator             = m_StringElementsSeparator.Text;
             l_Profile.UseGradient           = m_Bool_UseClockGradient.Value;
             l_Profile.UseFourColorsGradient = m_Bool_UseFourGradientColors.Value;

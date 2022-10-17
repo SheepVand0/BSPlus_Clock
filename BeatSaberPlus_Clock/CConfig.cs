@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json;
-using UnityEngine;
+﻿using BeatSaberPlus_Clock.UI;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System;
 using System.Linq;
-using BeatSaberPlus_Clock.UI;
+using UnityEngine;
 
 namespace BeatSaberPlus_Clock
 {
@@ -37,7 +36,7 @@ namespace BeatSaberPlus_Clock
             [JsonProperty] internal bool EnableAnchors       = false;
 
             [JsonProperty] internal bool SeparateDayHours = false;
-            [JsonProperty] internal bool BoolAmPm         = false;
+            [JsonProperty] internal bool ShowAmPm         = false;
 
             [JsonProperty] internal string       Separator   = ":";
             [JsonProperty] internal List<string> FormatOrder = new List<string>() { "hh", "mn", "ss" };
@@ -53,22 +52,6 @@ namespace BeatSaberPlus_Clock
             [JsonProperty] internal Color ClockGradientColor2   = new Color(1, 0, 1, 1);
             [JsonProperty] internal Color ClockGradientColor3   = new Color(1, 0, 0.8f, 1);
             [JsonProperty] internal Color ClockGradientColor4   = new Color(1, 0, 0.8f, 1);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////
-
-        internal ClockConfig GetActiveConfig()
-        {
-            if (Profiles.ElementAt(SelectedProfileIndex) == null)
-                SelectedProfileIndex = 0;
-
-            return Profiles.ElementAt(SelectedProfileIndex);
-        }
-
-        internal List<JsonConverter> GetConverters()
-        {
-            return m_JsonConverters;
         }
 
         ////////////////////////////////////////////////////////////////////////////
@@ -100,6 +83,22 @@ namespace BeatSaberPlus_Clock
                 SelectedProfileIndex = 0;
 
             Save();
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
+        internal ClockConfig GetActiveConfig()
+        {
+            if (Profiles.ElementAt(SelectedProfileIndex) == null)
+                SelectedProfileIndex = 0;
+
+            return Profiles.ElementAt(SelectedProfileIndex);
+        }
+
+        internal List<JsonConverter> GetConverters()
+        {
+            return m_JsonConverters;
         }
     }
 }

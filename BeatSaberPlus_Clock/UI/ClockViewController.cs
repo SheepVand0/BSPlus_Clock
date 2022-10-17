@@ -1,6 +1,5 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberPlus.SDK.UI;
-using System.Collections.Generic;
 using TMPro;
 
 namespace BeatSaberPlus_Clock.UI
@@ -50,32 +49,43 @@ namespace BeatSaberPlus_Clock.UI
 
         internal void ApplyTime(int p_Hours, int p_Minutes, int p_Seconds)
         {
-            List<string> l_Format = CConfig.Instance.GetActiveConfig().FormatOrder;
-            m_ClockText.text = string.Empty;
-            for (int l_i = 0; l_i < l_Format.Count; l_i++)
+            var l_Config    = CConfig.Instance.GetActiveConfig();
+            var l_Text      = string.Empty;
+
+            for (int l_I = 0; l_I < l_Config.FormatOrder.Count; ++l_I)
             {
-                string l_FormatPart = l_Format[l_i];
+                if (l_I != 0)
+                    m_ClockText.text += l_Config.Separator;
+
+                var l_FormatPart = l_Config.FormatOrder[l_I];
                 switch (l_FormatPart)
                 {
                     case "hh":
                         int l_Hours = 0;
-                        l_Hours = (CConfig.Instance.GetActiveConfig().SeparateDayHours || CConfig.Instance.GetActiveConfig().BoolAmPm) ? (p_Hours > 12) ? p_Hours - 12 : p_Hours : p_Hours;
-                        m_ClockText.text += l_Hours.ToString("00");
+                        l_Hours = (l_Config.SeparateDayHours || l_Config.ShowAmPm) ? (p_Hours > 12) ? p_Hours - 12 : p_Hours : p_Hours;
+                        l_Text += l_Hours.ToString("00");
                         break;
+
                     case "mn":
-                        m_ClockText.text += p_Minutes.ToString("00");
+                        l_Text += p_Minutes.ToString("00");
                         break;
+
                     case "ss":
-                        m_ClockText.text += p_Seconds.ToString("00");
+                        l_Text += p_Seconds.ToString("00");
                         break;
-                    default: m_ClockText.text += l_FormatPart; break;
+
+                    default:
+                        l_Text += l_FormatPart;
+                        break;
                 }
-                if (l_i != l_Format.Count - 1)
-                    m_ClockText.text += CConfig.Instance.GetActiveConfig().Separator;
             }
-            if (CConfig.Instance.GetActiveConfig().BoolAmPm)
-                m_ClockText.text += $" {(p_Hours > 12 ? "PM" : "AM")}";
-            ClockFloatingScreen.Instance.SetScale(m_ClockText.text.Length * (CConfig.Instance.GetActiveConfig().FontSize) * 0.5f);
+
+            if (l_Config.ShowAmPm)
+                l_Text += $" {(p_Hours > 12 ? "PM" : "AM")}";
+
+            m_ClockText.text = l_Text;
+
+            ClockFloatingScreen.Instance.SetScale(m_ClockText.text.Length * (l_Config.FontSize) * 0.5f);
         }
     }
 }
