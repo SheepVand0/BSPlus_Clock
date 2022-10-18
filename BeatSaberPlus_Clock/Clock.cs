@@ -1,6 +1,8 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberPlus_Clock.UI;
+using CP_SDK.Unity;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -124,7 +126,7 @@ namespace BeatSaberPlus_Clock
         #region Events
         private void OnConfigLoaded()
         {
-            LoadFonts();
+            MTCoroutineStarter.Start(LoadFonts());
             if (ClockFloatingScreen.Instance == null)
                 ClockFloatingScreen.CreateClock();
             else
@@ -134,8 +136,10 @@ namespace BeatSaberPlus_Clock
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
         #region Memeber Functions
-        internal static void LoadFonts()
+        internal static IEnumerator LoadFonts()
         {
+            yield return new WaitUntil(() => CP_SDK.Unity.FontManager.IsInitialized);
+
             m_AvailableFonts.Clear();
 
             if (CP_SDK.Unity.FontManager.TryGetTMPFontByFamily("Arial", out var l_Arial))       m_AvailableFonts.Add(l_Arial);

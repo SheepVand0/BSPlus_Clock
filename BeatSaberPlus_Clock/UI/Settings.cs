@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using BeatSaberMarkupLanguage;
+using CP_SDK.Unity;
 
 namespace BeatSaberPlus_Clock.UI
 {
@@ -211,7 +212,7 @@ namespace BeatSaberPlus_Clock.UI
             BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_FontDropdown, l_FontDropdownEvent, true);
             Clock.e_OnFontsLoaded += OnFontsLoaded;
             OnFontsLoaded();
-            m_FontRefreshButton = BeatSaberPlus.SDK.UI.Button.Create(m_FontRefreshObject.transform, "Refresh fonts", () => { Clock.LoadFonts(); });
+            m_FontRefreshButton = BeatSaberPlus.SDK.UI.Button.Create(m_FontRefreshObject.transform, "Refresh fonts", () => { MTCoroutineStarter.Start(Clock.LoadFonts()); });
             m_FontPercent = ((l_Config.FontSize / 10) * 100 / 300) / Clock.CLOCK_FONT_SIZE_MULTIPLIER;
             BeatSaberPlus.SDK.UI.SliderSetting.Setup(m_Slider_FontSize, l_FontSizeEvent, BeatSaberPlus.SDK.UI.BSMLSettingFormartter.Percentage, m_FontPercent, true);
 

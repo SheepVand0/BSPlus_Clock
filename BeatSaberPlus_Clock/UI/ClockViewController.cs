@@ -1,5 +1,6 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberPlus.SDK.UI;
+using System.Linq;
 using TMPro;
 
 namespace BeatSaberPlus_Clock.UI
@@ -70,6 +71,16 @@ namespace BeatSaberPlus_Clock.UI
 
             m_ClockText.font = ClockFloatingScreen.ClockFont;
             m_ClockText.fontSize = p_Config.FontSize;
+
+            var l_Text = string.Empty;
+            for (int l_i = 0; l_i < p_Config.FormatOrder.Count;l_i++)
+            {
+                if (l_i != 0) l_Text += p_Config.Separator;
+
+                l_Text += p_Config.FormatOrder.ElementAt(l_i);
+            }
+
+            ClockFloatingScreen.Instance.SetScale(l_Text.Length * (p_Config.FontSize) * 0.8f, p_Config.FontSize * 2f);
         }
 
         internal void ApplyTime(int p_Hours, int p_Minutes, int p_Seconds)
@@ -113,8 +124,6 @@ namespace BeatSaberPlus_Clock.UI
             l_Text += m_Rich1;
 
             m_ClockText.text = l_Text;
-
-            ClockFloatingScreen.Instance.SetScale(m_ClockText.text.Length * (l_Config.FontSize) * 0.5f, l_Config.FontSize * 2f);
         }
     }
 }

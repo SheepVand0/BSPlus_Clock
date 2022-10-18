@@ -56,6 +56,8 @@ namespace BeatSaberPlus_Clock.UI
         {
             if (Instance != null) { Logger.Instance.Error("An instance of the clock already exist not creating"); return; }
 
+            Instance = this;
+
             m_DayTime    = (float)DateTime.Now.TimeOfDay.TotalSeconds;
             m_LastUpdate = Time.realtimeSinceStartup;
 
@@ -79,8 +81,6 @@ namespace BeatSaberPlus_Clock.UI
             GameObject.DontDestroyOnLoad(this);
             GameObject.DontDestroyOnLoad(FloatingScreenObject);
             GameObject.DontDestroyOnLoad(m_ClockViewController);
-
-            Instance = this;
 
             StartCoroutine(ManualLateUpdate());
         }
