@@ -41,8 +41,11 @@ namespace BeatSaberPlus_Clock
             [JsonProperty] internal string       Separator   = ":";
             [JsonProperty] internal List<string> FormatOrder = new List<string>() { "hh", "mn", "ss" };
 
-            [JsonProperty] internal float  FontSize  = 75f;
-            [JsonProperty] internal string FontName  = "Arial";
+            [JsonProperty] internal float  FontSize       = 75f;
+            [JsonProperty] internal string FontName       = "Arial";
+            [JsonProperty] internal bool   FontBold       = false;
+            [JsonProperty] internal bool   FontItalic     = false;
+            [JsonProperty] internal bool   FontUnderlined = false;
 
             [JsonProperty] internal bool  UseGradient           = false;
             [JsonProperty] internal bool  UseFourColorsGradient = false;

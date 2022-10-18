@@ -8,9 +8,12 @@ namespace BeatSaberPlus_Clock.UI
     {
         [UIComponent("ClockText")] private TextMeshProUGUI m_ClockText = null;
 
+        string m_Rich0 = string.Empty;
+        string m_Rich1 = string.Empty;
+
         protected override string GetViewContentDescription()
         {
-            return "<bg><vertical><text id='ClockText' text='Clock'/></vertical></bg>";
+            return "<bg><vertical><text id='ClockText' text='Clock' rich-text='true'/></vertical></bg>";
         }
 
         internal void ApplySettings(CConfig.ClockConfig p_Config)
@@ -43,14 +46,38 @@ namespace BeatSaberPlus_Clock.UI
             {
                 m_ClockText.color = p_Config.ClockColor;
             }
+
+            m_Rich0 = string.Empty;
+            m_Rich1 = string.Empty;
+
+            if (p_Config.FontBold)
+            {
+                m_Rich0 += "<b>";
+                m_Rich1 += "</b>";
+            }
+
+            if (p_Config.FontItalic)
+            {
+                m_Rich0 += "<i>";
+                m_Rich1 += "</i>";
+            }
+
+            if (p_Config.FontUnderlined)
+            {
+                m_Rich0 += "<u>";
+                m_Rich1 += "</u>";
+            }
+
             m_ClockText.font = ClockFloatingScreen.ClockFont;
-            m_ClockText.fontSize = CConfig.Instance.GetActiveConfig().FontSize;
+            m_ClockText.fontSize = p_Config.FontSize;
         }
 
         internal void ApplyTime(int p_Hours, int p_Minutes, int p_Seconds)
         {
             var l_Config    = CConfig.Instance.GetActiveConfig();
             var l_Text      = string.Empty;
+
+            l_Text += m_Rich0;
 
             for (int l_I = 0; l_I < l_Config.FormatOrder.Count; ++l_I)
             {
@@ -83,9 +110,11 @@ namespace BeatSaberPlus_Clock.UI
             if (l_Config.ShowAmPm)
                 l_Text += $" {(p_Hours > 12 ? "PM" : "AM")}";
 
+            l_Text += m_Rich1;
+
             m_ClockText.text = l_Text;
 
-            ClockFloatingScreen.Instance.SetScale(m_ClockText.text.Length * (l_Config.FontSize) * 0.5f);
+            ClockFloatingScreen.Instance.SetScale(m_ClockText.text.Length * (l_Config.FontSize) * 0.5f, l_Config.FontSize * 2f);
         }
     }
 }

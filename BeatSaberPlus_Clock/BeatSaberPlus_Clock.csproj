@@ -192,7 +192,10 @@
     <Compile Include="UI\Widgets\CustomStringSetting.cs" />
     <Compile Include="UI\CustomUIComponent.cs" />
     <Compile Include="UI\Settings.cs" />
+    <Compile Include="UI\Widgets\CustomTextSegmentedControl.cs" />
+    <Compile Include="UI\Widgets\FormatSetting.cs" />
     <Compile Include="Utils\Utils.cs" />
+    <EmbeddedResource Include="UI\Widgets\CustomFormatCellList.bsml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
@@ -201,9 +204,6 @@
     <None Include="BuildTargets.targets" />
     <EmbeddedResource Include="UI\Settings.bsml">
       <DependentUpon>Settings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Widgets\CustomFormatCellList.bsml">
-      <DependentUpon>CustomFormatCellList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Widgets\CustomStringSetting.bsml">
       <DependentUpon>CustomStringSetting.cs</DependentUpon>

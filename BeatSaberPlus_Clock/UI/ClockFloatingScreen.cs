@@ -81,6 +81,8 @@ namespace BeatSaberPlus_Clock.UI
             GameObject.DontDestroyOnLoad(m_ClockViewController);
 
             Instance = this;
+
+            StartCoroutine(ManualLateUpdate());
         }
         private void Destroy()
         {
@@ -92,6 +94,7 @@ namespace BeatSaberPlus_Clock.UI
             Clock.e_OnSettingEdited -= ApplySettings;
         }
         #endregion
+
         #region Events
         private void OnClockGrab(object p_Sender, FloatingScreenHandleEventArgs p_EventArgs)
         {
@@ -172,9 +175,9 @@ namespace BeatSaberPlus_Clock.UI
             }
         }
 
-        internal void SetScale(float p_Width)
+        internal void SetScale(float p_Width, float p_Height)
         {
-            FloatingScreenObject.ScreenSize = new Vector2(p_Width, FloatingScreenObject.ScreenSize.y);
+            FloatingScreenObject.ScreenSize = new Vector2(p_Width, p_Height);
         }
         #endregion
 
@@ -189,6 +192,8 @@ namespace BeatSaberPlus_Clock.UI
         #region Clock
         private IEnumerator ManualLateUpdate()
         {
+            yield return new WaitForSeconds(0.1f);
+
             float l_TimeSinceStartup = Time.realtimeSinceStartup;
             m_DayTime += (l_TimeSinceStartup - m_LastUpdate);
             m_DayTime %= DAY_DURATION;
@@ -199,15 +204,14 @@ namespace BeatSaberPlus_Clock.UI
             int l_Seconds = (int)((m_DayTime - ((l_Hours * HOUR) + (l_Minutes * MINUTE))));
 
             if (l_Seconds == m_LastUpdateSecond)
+            {
+                StartCoroutine(ManualLateUpdate());
                 yield break;
+            }
 
             m_LastUpdateSecond = l_Seconds;
             m_ClockViewController.ApplyTime(l_Hours, l_Minutes, l_Seconds);
-            yield return null;
-        }
 
-        private void LateUpdate()
-        {
             StartCoroutine(ManualLateUpdate());
         }
         #endregion

@@ -3,7 +3,7 @@
 		<text text='Clock' align='Center' font-size='4.2'/>
 	</horizontal>
 
-	<horizontal id='Tabs' spacing='0' pad-top='0' min-width='145'>
+	<horizontal id='Tabs' bg='round-rect-panel' spacing='0' pad-top='0' min-width='145'>
 		<vertical spacing='0' pad-top='0'>
 			<horizontal id='TabSelector' pad-top='2' pref-height='7' pad-left='8' pad-right='8' min-width='145'>
 			</horizontal>
@@ -12,7 +12,7 @@
 
 			<!-- =========================================== -->
 
-			<horizontal id='TabProfiles' bg='round-rect-panel' min-height='65' spacing='0' pad='0'>
+			<horizontal id='TabProfiles' pref-height='65' spacing='0' pad='0'>
 				<vertical>
 					<horizontal id='ProfileListFrame' spacing='0' pad='0'>
 						<vertical min-width='5' pref-width='10'>
@@ -34,38 +34,54 @@
 
 			<!-- =========================================== -->
 
-			<horizontal id='TabGeneral' bg='round-rect-panel' min-height='65' spacing='0' pad='0'>
+			<horizontal id='TabGeneral' pref-height='65' spacing='0' pad='0'>
 				<vertical>
-					<text font-size='3.5' align='Center' font-color='yellow' text='Separator : '></text>
-					<vertical id='FormatElementsSeparatorTransform'/>
-					<horizontal>
-						<text font-size='3.5' align='Center' font-color='yellow' text='12/24 Format : '></text>
-						<toggle-setting id='BoolSeparateDayHours'/>
-						<text font-size='3.5' align='Center' font-color='yellow' text='AM/PM Format : '></text>
-						<toggle-setting id='BoolAmPm'/>
+					<vertical>
+						<text font-size='3.5' align='Center' font-color='yellow' text='Separator : '></text>
+						<vertical id='FormatElementsSeparatorTransform'/>
+					</vertical>
+					<horizontal pref-width='105'>
+						<horizontal>
+							<text font-size='3.5' align='Center' font-color='yellow' text='12/24 Format : '></text>
+							<toggle-setting id='BoolSeparateDayHours'/>
+						</horizontal>
+						<horizontal>
+							<text font-size='3.5' align='Center' font-color='yellow' text='AM/PM Format : '></text>
+							<toggle-setting id='BoolAmPm'/>
+						</horizontal>
 					</horizontal>
-					<text font-size='3.5' align='Center' font-color='yellow' text='Font Size (%) : '></text>
-					<slider-setting id='SliderFontSize' apply-on-change='true' min='0.01' max='1' increment='0.01' show-buttons='true' size-delta-x='40'/>
-					<text font-size='3.5' align='Center' font-color='yellow' text='Font : '></text>
-					<dropdown-list-setting id='FontDropdown' choices='Fonts' value='FontValue'></dropdown-list-setting>
-					<horizontal id='FontsRefreshLayout'></horizontal>
-					<horizontal pref-height='11'>
-					</horizontal>
+					<horizontal pref-height='17' />
 				</vertical>
 			</horizontal>
 
-			<horizontal id='TabFormat' bg='round-rect-panel' min-height='65' spacing='0' pad='0'>
+			<horizontal id='TabFonts' pref-height='65' spacing='0' pad='0'>
+				<vertical>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Font : '></text>
+					<dropdown-list-setting id='FontDropdown' choices='Fonts' value='FontValue'></dropdown-list-setting>
+					<horizontal id='FontsRefreshLayout'></horizontal>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Font Size (%) : '></text>
+					<slider-setting id='SliderFontSize' apply-on-change='true' min='0.01' max='1' increment='0.01' show-buttons='true' size-delta-x='40'/>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Bold : '></text>
+					<bool-setting id='BoolFontBold'/>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Italic : '></text>
+					<bool-setting id='BoolFontItalic'/>
+					<text font-size='3.5' align='Center' font-color='yellow' text='Underlined : '></text>
+					<bool-setting id='BoolFontUnderlined'/>
+					<horizontal pref-height='5' />
+				</vertical>
+			</horizontal>
+
+			<horizontal id='TabFormat' pref-height='65' spacing='0' pad='0'>
 				<vertical>
 					<text font-size='3.5' align='Center' font-color='yellow' text='Format'></text>
 					<vertical id='FormatTransform'/>
-					<horizontal pref-height='9'>
-					</horizontal>
+					<horizontal pref-height='9' />
 				</vertical>
 			</horizontal>
 
 			<!-- =========================================== -->
 
-			<horizontal id='TabStyle' bg='round-rect-panel' min-height='65' spacing='0' pad='0'>
+			<horizontal id='TabColor' pref-height='65' spacing='0' pad='0'>
 				<vertical>
 					<text font-size='3.5' align='Center' font-color='yellow' text='Use Clock Gradient'></text>
 					<toggle-setting id='BoolUseClockGradient'/>
@@ -91,14 +107,13 @@
 							<color-setting id='ColorClock4' />
 						</horizontal>
 					</horizontal>
-					<horizontal pref-height='17'>
-					</horizontal>
+					<horizontal pref-height='17' />
 				</vertical>
 			</horizontal>
 
 			<!-- =========================================== -->
 
-			<horizontal id='TabPosition' bg='round-rect-panel' min-height='65' spacing='0' pad='0'>
+			<horizontal id='TabPosition' pref-height='65' spacing='0' pad='0'>
 				<vertical>
 					<text font-size='3.5' align='Center' font-color='yellow' text='Enable clock grabber'></text>
 					<toggle-setting id='EnableClockGrabbing'/>
@@ -106,8 +121,7 @@
 					<dropdown-list-setting id='ClockMovementMode' choices='ClockMovementModeList' value='MovementMode'/>
 					<text font-size='3.5' align='Center' font-color='yellow' text='Enable Anchors'></text>
 					<toggle-setting id='EnableAnchors'/>
-					<horizontal pref-height='28'>
-					</horizontal>
+					<horizontal pref-height='28' />
 				</vertical>
 			</horizontal>
 		</vertical>

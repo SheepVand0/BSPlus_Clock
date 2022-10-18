@@ -1,6 +1,8 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.Parser;
+using CP_SDK.Unity;
 using System;
+using System.Collections;
 using System.Reflection;
 using UnityEngine;
 
@@ -17,10 +19,15 @@ namespace BeatSaberPlus_Clock.UI
             TItem l_Item = l_ParentGameObject.AddComponent<TItem>();
             l_Item.m_ParentGameObject = l_ParentGameObject;
 
-            var l_Resource = string.Empty;
-            try {
-                l_Resource = CP_SDK.Misc.Resources.FromPathStr(Assembly.GetAssembly(typeof(TItem)), string.Join(".", typeof(TItem).Namespace, typeof(TItem).Name));
-            } catch { }
+            var l_Resource = l_Item.GetResourceDescription();
+            if (l_Resource == string.Empty)
+            {
+                try
+                {
+                    l_Resource = CP_SDK.Misc.Resources.FromPathStr(Assembly.GetAssembly(typeof(TItem)), string.Join(".", typeof(TItem).Namespace, typeof(TItem).Name));
+                }
+                catch { }
+            }
 
             if (!string.IsNullOrEmpty(l_Resource))
             {
@@ -35,13 +42,18 @@ namespace BeatSaberPlus_Clock.UI
                 }
             }
 
-            l_Item.PostCreate();
+            MTCoroutineStarter.Start(_PostCreate(l_Item));
             p_PostCreate?.Invoke(l_Item);
 
             return l_Item;
         }
+        private static IEnumerator _PostCreate(CustomUIComponent p_Item)
+        {
+            yield return new WaitForSeconds(0.4f);
 
-
+            p_Item.PostCreate();
+        }
+        public virtual string GetResourceDescription() { return string.Empty; }
         protected virtual void PostCreate(){}
     }
 }
