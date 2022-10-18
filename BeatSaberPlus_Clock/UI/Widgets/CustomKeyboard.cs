@@ -20,7 +20,10 @@ namespace BeatSaberPlus_Clock.UI.Widgets
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// Open keyboard
+        /// </summary>
+        /// <param name="p_OpenText">The text that will appear when opening the keyboard</param>
         internal void Open(string p_OpenText)
         {
             m_ModalKeyboard.modalView.Show(true, true);
@@ -30,7 +33,10 @@ namespace BeatSaberPlus_Clock.UI.Widgets
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// Event called when the key Enter was pressed on the virtual keyboard
+        /// </summary>
+        /// <param name="p_Value"></param>
         private void EnterPressed(string p_Value)
         {
             OnKeyboardEnterPressed?.Invoke(m_OldValue, p_Value);

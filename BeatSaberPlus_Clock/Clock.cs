@@ -124,6 +124,9 @@ namespace BeatSaberPlus_Clock
         #endregion
 
         #region Events
+        /// <summary>
+        /// Function called when a config was loaded
+        /// </summary>
         private void OnConfigLoaded()
         {
             MTCoroutineStarter.Start(LoadFonts());
@@ -136,6 +139,9 @@ namespace BeatSaberPlus_Clock
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
         #region Memeber Functions
+        /// <summary>
+        /// Function to get all fonts in clock fonts folder
+        /// </summary>
         internal static IEnumerator LoadFonts()
         {
             yield return new WaitUntil(() => CP_SDK.Unity.FontManager.IsInitialized);
@@ -166,6 +172,9 @@ namespace BeatSaberPlus_Clock
             e_OnFontsLoaded?.Invoke();
         }
 
+        /// <summary>
+        /// Apply font to the clock text
+        /// </summary>
         internal static void ApplyFont()
         {
             for (int l_i = 0;l_i < m_AvailableFonts.Count;l_i++)

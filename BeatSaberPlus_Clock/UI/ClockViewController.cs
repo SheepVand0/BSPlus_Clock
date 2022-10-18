@@ -15,6 +15,10 @@ namespace BeatSaberPlus_Clock.UI
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Get bsml description
+        /// </summary>
+        /// <returns></returns>
         protected override string GetViewContentDescription()
         {
             return "<bg><vertical><text id='ClockText' text='Clock' rich-text='true'/></vertical></bg>";
@@ -23,6 +27,10 @@ namespace BeatSaberPlus_Clock.UI
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Apply style settings on clock
+        /// </summary>
+        /// <param name="p_Config">The config you want to apply</param>
         internal void ApplySettings(CConfig.ClockConfig p_Config)
         {
             if (m_ClockText == null) return;
@@ -92,6 +100,12 @@ namespace BeatSaberPlus_Clock.UI
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Get Current time and change it on the text
+        /// </summary>
+        /// <param name="p_Hours"></param>
+        /// <param name="p_Minutes"></param>
+        /// <param name="p_Seconds"></param>
         internal void ApplyTime(int p_Hours, int p_Minutes, int p_Seconds)
         {
             var l_Config    = CConfig.Instance.GetActiveConfig();

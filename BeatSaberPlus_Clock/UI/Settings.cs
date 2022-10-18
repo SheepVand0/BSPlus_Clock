@@ -254,14 +254,16 @@ namespace BeatSaberPlus_Clock.UI
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// Event called when a config is loaded
+        /// </summary>
         private void OnConfigLoaded()
         {
             m_EnableClockGrabbing.Value = CConfig.Instance.GetActiveConfig().EnableClockGrabbing;
             m_EnableAnchors.Value = CConfig.Instance.GetActiveConfig().EnableAnchors;
             m_BoolSeparateDayHours.Value = CConfig.Instance.GetActiveConfig().SeparateDayHours;
             m_BoolAmPm.Value = CConfig.Instance.GetActiveConfig().ShowAmPm;
-            m_StringElementsSeparator.SetValue(CConfig.Instance.GetActiveConfig().Separator);
+            m_StringElementsSeparator.ApplyValue(CConfig.Instance.GetActiveConfig().Separator);
             m_FormatSettingsList.LoadFromConfig();
             m_Slider_FontSize.Value = ((CConfig.Instance.GetActiveConfig().FontSize / 10) * 100 / 300) / Clock.CLOCK_FONT_SIZE_MULTIPLIER;
             m_Bool_UseClockGradient.Value = CConfig.Instance.GetActiveConfig().UseGradient;
@@ -295,6 +297,11 @@ namespace BeatSaberPlus_Clock.UI
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Event called when a profile is selected
+        /// </summary>
+        /// <param name="p_TableView"></param>
+        /// <param name="p_Index"></param>
         private void OnProfileSelected(HMUI.TableView p_TableView, int p_Index)
         {
             CConfig.Instance.SelectedProfileIndex = p_Index;
@@ -302,6 +309,9 @@ namespace BeatSaberPlus_Clock.UI
             Clock.InvokeOnConfigLoaded();
         }
 
+        /// <summary>
+        /// Rebuild the list of profiles
+        /// </summary>
         internal void RefreshProfilesList()
         {
             m_EventsList.TableViewInstance.ClearSelection();
@@ -334,19 +344,27 @@ namespace BeatSaberPlus_Clock.UI
             else
                 m_EventsList.TableViewInstance.SelectCellWithIdx(CConfig.Instance.SelectedProfileIndex);
         }
-
+        /// <summary>
+        /// Go one page up on profiles list
+        /// </summary>
         private void ProfilePageUp()
         {
             m_CurrentProfilePage -= 1;
             RefreshProfilesList();
         }
 
+        /// <summary>
+        /// Go one page down on profiles list
+        /// </summary>
         private void ProfilePageDown()
         {
             m_CurrentProfilePage += 1;
             RefreshProfilesList();
         }
 
+        /// <summary>
+        /// Create new profile by clicking the button
+        /// </summary>
         private void CreateProfile()
         {
             if (m_ProfileCreateKeyboard == null)
@@ -366,7 +384,9 @@ namespace BeatSaberPlus_Clock.UI
 
             m_ProfileCreateKeyboard.Open(string.Empty);
         }
-
+        /// <summary>
+        /// Delete selected profile by clicking the button
+        /// </summary>
         private void DeleteProfile()
         {
             if (CConfig.Instance.Profiles.Count == 1) { ShowMessageModal("You can't delete a config when you only own one"); return; }
@@ -382,7 +402,9 @@ namespace BeatSaberPlus_Clock.UI
 
             ShowMessageModal($"Succefully deleted profile : {l_Name}");
         }
-
+        /// <summary>
+        /// Rename profile by clicking the button
+        /// </summary>
         private void RenameProfile()
         {
             if (m_ProfileRenameKeyboard == null)
@@ -401,7 +423,9 @@ namespace BeatSaberPlus_Clock.UI
 
             m_ProfileRenameKeyboard.Open(CConfig.Instance.Profiles[CConfig.Instance.SelectedProfileIndex].ProfileName);
         }
-
+        /// <summary>
+        /// Exporting profile by confirming
+        /// </summary>
         private void ExportCurrentProfile()
         {
             try
@@ -422,7 +446,9 @@ namespace BeatSaberPlus_Clock.UI
                 Logger.Instance.Error(l_E);
             }
         }
-
+        /// <summary>
+        /// Show import profile frame
+        /// </summary>
         private void OpenImportFrame()
         {
             m_Tabs.gameObject.SetActive(false);
@@ -441,13 +467,17 @@ namespace BeatSaberPlus_Clock.UI
             m_ImportProfileFrame_DropDown.values = l_Files;
             m_ImportProfileFrame_DropDown.UpdateChoices();
         }
-
+        /// <summary>
+        /// Close import profile frame
+        /// </summary>
         private void CloseImportFrame()
         {
             m_Tabs.gameObject.SetActive(true);
             m_ImportProfileFrame.gameObject.SetActive(false);
         }
-
+        /// <summary>
+        /// Confirm profile import
+        /// </summary>
         private void ImportProfile()
         {
             try
@@ -470,7 +500,10 @@ namespace BeatSaberPlus_Clock.UI
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// Event called when a setting has been changed
+        /// </summary>
+        /// <param name="p_Value"></param>
         private void OnSettingChanged(object p_Value)
         {
             var l_Profile = CConfig.Instance.GetActiveConfig();
@@ -500,21 +533,30 @@ namespace BeatSaberPlus_Clock.UI
 
             //ClockFloatingScreen.Instance.ApplySettings();
         }
-
+        /// <summary>
+        /// Event called when the font size has been changed
+        /// </summary>
+        /// <param name="p_Value"></param>
         private void OnFontSizeChanged(object p_Value)
         {
             CConfig.Instance.GetActiveConfig().FontSize = Clock.CLOCK_FONT_SIZE_MULTIPLIER * (((float)p_Value * 10) * 300 / 100);
             Clock.InvokeOnSettingChanged();
             Clock.Instance.SaveConfig();
         }
-
+        /// <summary>
+        /// Event called when a font has been selected
+        /// </summary>
+        /// <param name="p_Value"></param>
         private void OnFontSelected(object p_Value)
         {
             CConfig.Instance.GetActiveConfig().FontName = (string)p_Value;
             CConfig.Instance.Save();
             Clock.ApplyFont();
         }
-
+        /// <summary>
+        /// Eventy called when movement mode changed
+        /// </summary>
+        /// <param name="p_Value"></param>
         private void OnMovementModeSelected(object p_Value)
         {
             switch ((string)p_Value)
@@ -536,10 +578,18 @@ namespace BeatSaberPlus_Clock.UI
                     break;
             }
         }
+        /// <summary>
+        /// Event on a profile to import has been selected
+        /// </summary>
+        /// <param name="p_Value"></param>
         private void OnImportProfileSelected(object p_Value)
         {
             m_SelectedImportProfile = (string)p_Value;
         }
+        /// <summary>
+        /// Event when the format separator has been changed
+        /// </summary>
+        /// <param name="p_Value"></param>
         private void OnSeparatorChange(string p_Value)
         {
             CConfig.Instance.GetActiveConfig().Separator = p_Value;
@@ -547,7 +597,9 @@ namespace BeatSaberPlus_Clock.UI
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// Event called when fonts has been loaded
+        /// </summary>
         private void OnFontsLoaded()
         {
             m_FontDropdown.values.Clear();
@@ -559,7 +611,9 @@ namespace BeatSaberPlus_Clock.UI
             m_FontDropdown.Value = CConfig.Instance.GetActiveConfig().FontName;
             m_FontDropdown.ApplyValue();
         }
-
+        /// <summary>
+        /// Refresh dropdown containing list of fonts
+        /// </summary>
         internal void UpdateFontsList()
         {
             List<object> l_NewFonts = new List<object>();
@@ -569,7 +623,11 @@ namespace BeatSaberPlus_Clock.UI
             m_FontDropdown.dropdown.ReloadData();
             SelectFont(CConfig.Instance.GetActiveConfig().FontName, true);
         }
-
+        /// <summary>
+        /// Select font from dropdown
+        /// </summary>
+        /// <param name="p_Name">Font name</param>
+        /// <param name="p_ApplyOnDropdown">Apply change on dropdown</param>
         internal void SelectFont(string p_Name, bool p_ApplyOnDropdown)
         {
             foreach (var l_Current in Clock.m_AvailableFonts)
@@ -584,7 +642,11 @@ namespace BeatSaberPlus_Clock.UI
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// Load tutorial environment in menu
+        /// </summary>
+        /// <param name="p_Callback"></param>
+        /// <returns></returns>
         private bool LoadEnvironment(Action p_Callback = null)
         {
             var l_GameSceneManager = Resources.FindObjectsOfTypeAll<GameScenesManager>().FirstOrDefault();
@@ -624,7 +686,9 @@ namespace BeatSaberPlus_Clock.UI
 
             return true;
         }
-
+        /// <summary>
+        /// Unload tutorial environment from menu
+        /// </summary>
         private void UnloadEnvironment()
         {
             GameScenesManager l_ScenesManager = Resources.FindObjectsOfTypeAll<GameScenesManager>().FirstOrDefault();

@@ -16,6 +16,14 @@ namespace BeatSaberPlus_Clock.UI
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Used to create UIComponents
+        /// </summary>
+        /// <typeparam name="TItem">Type of the component (Instance of CustomUIComponent)</typeparam>
+        /// <param name="p_Parent">Where the component will be placed</param>
+        /// <param name="p_UnderParent">Is the component next or under this parent ? (In Hierarchy)</param>
+        /// <param name="p_PostCreate">Callback called when item has finished creation</param>
+        /// <returns></returns>
         internal static TItem Create<TItem>(Transform p_Parent, bool p_UnderParent, Action<TItem> p_PostCreate = null) where TItem : CustomUIComponent
         {
             GameObject l_ParentGameObject = (p_UnderParent) ? p_Parent.transform.gameObject : p_Parent.transform.parent.gameObject;
@@ -54,6 +62,11 @@ namespace BeatSaberPlus_Clock.UI
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Couroutine called to prevent BSML delay when Parse
+        /// </summary>
+        /// <param name="p_Item"></param>
+        /// <returns></returns>
         private static IEnumerator _PostCreate(CustomUIComponent p_Item)
         {
             yield return new WaitForSeconds(0.4f);
@@ -64,7 +77,14 @@ namespace BeatSaberPlus_Clock.UI
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Get content for parsing
+        /// </summary>
+        /// <returns></returns>
         public virtual string GetResourceDescription() { return string.Empty; }
+        /// <summary>
+        /// Function called when Item had finished creation (Overridable)
+        /// </summary>
         protected virtual void PostCreate(){}
     }
 }

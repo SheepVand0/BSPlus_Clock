@@ -6,6 +6,9 @@ namespace BeatSaberPlus_Clock.Components
 {
     public class Anchor : MonoBehaviour
     {
+        /// <summary>
+        /// Anchor config
+        /// </summary>
         public struct Settings
         {
             public string   Name            { get; set; }
@@ -16,6 +19,13 @@ namespace BeatSaberPlus_Clock.Components
             ////////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////////////
 
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="p_Name">Anchor name</param>
+            /// <param name="p_Position">Anchor position</param>
+            /// <param name="p_RotationEuler">Anchor rotation</param>
+            /// <param name="p_Radius">Anchor radius</param>
             public Settings(string p_Name, Vector3 p_Position, Vector3 p_RotationEuler, float p_Radius)
             {
                 Name            = p_Name;
@@ -39,6 +49,13 @@ namespace BeatSaberPlus_Clock.Components
 
         internal static Material m_AnchorMaterial;
 
+        /// <summary>
+        /// Create an anchor
+        /// </summary>
+        /// <param name="p_Position">Anchor position</param>
+        /// <param name="p_RotationEuler">Anchor rotation</param>
+        /// <param name="p_Radius">Action radius</param>
+        /// <returns></returns>
         internal static Anchor CreateAnchor(Vector3 p_Position, Vector3 p_RotationEuler, float p_Radius)
         {
             if (m_AnchorMaterial == null) {
@@ -49,10 +66,13 @@ namespace BeatSaberPlus_Clock.Components
 
             Anchor l_Anchor;
             (l_Anchor = new GameObject("Anchor").AddComponent<Anchor>()).m_Radius = p_Radius;
-            l_Anchor.SetPosition(p_Position, p_RotationEuler);
+            l_Anchor.SetPositionAndRotation(p_Position, p_RotationEuler);
             return l_Anchor;
         }
 
+        /// <summary>
+        /// Destroy all anchors
+        /// </summary>
         internal static void DestroysAnchors()
         {
             foreach (Anchor l_Current in Resources.FindObjectsOfTypeAll<Anchor>())
@@ -61,8 +81,12 @@ namespace BeatSaberPlus_Clock.Components
                 GameObject.DestroyImmediate(l_Current.gameObject);
             }
         }
-
-        internal void SetPosition(Vector3 p_Position, Vector3 p_RotationEuler)
+        /// <summary>
+        /// Set Position and rotation of this anchor
+        /// </summary>
+        /// <param name="p_Position">New position</param>
+        /// <param name="p_RotationEuler">New rotation</param>
+        internal void SetPositionAndRotation(Vector3 p_Position, Vector3 p_RotationEuler)
         {
             m_Sphere.transform.localPosition = p_Position;
             m_Sphere.transform.localRotation = Quaternion.Euler(p_RotationEuler);
@@ -71,6 +95,9 @@ namespace BeatSaberPlus_Clock.Components
             transform.localRotation = Quaternion.Euler(p_RotationEuler);
         }
 
+        /// <summary>
+        /// When an anchor is created
+        /// </summary>
         internal void Awake()
         {
             m_Sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);

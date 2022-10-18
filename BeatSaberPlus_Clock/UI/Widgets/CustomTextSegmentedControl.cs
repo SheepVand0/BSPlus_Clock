@@ -16,6 +16,11 @@ namespace BeatSaberPlus_Clock.UI.Widgets
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="p_Name">Tab name</param>
+        /// <param name="p_Object">Tab GameObject reference</param>
         internal Tab(string p_Name, GameObject p_Object)
         {
             Name = p_Name;
@@ -37,6 +42,12 @@ namespace BeatSaberPlus_Clock.UI.Widgets
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Create tab
+        /// </summary>
+        /// <param name="p_Parent">Where the tab will be created</param>
+        /// <param name="p_HideCellBackground">Hide the background of the tabs cells</param>
+        /// <param name="p_Tabs">List of tabs</param>
         internal CustomTextSegmentedControl(RectTransform p_Parent, bool p_HideCellBackground, List<Tab> p_Tabs)
         {
             List<string> l_TabTexts = new List<string>();

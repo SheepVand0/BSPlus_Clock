@@ -90,7 +90,10 @@ namespace BeatSaberPlus_Clock
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// Get Active profile config
+        /// </summary>
+        /// <returns></returns>
         internal ClockConfig GetActiveConfig()
         {
             if (Profiles.ElementAt(SelectedProfileIndex) == null)
@@ -99,6 +102,10 @@ namespace BeatSaberPlus_Clock
             return Profiles.ElementAt(SelectedProfileIndex);
         }
 
+        /// <summary>
+        /// Return json converters
+        /// </summary>
+        /// <returns></returns>
         internal List<JsonConverter> GetConverters()
         {
             return m_JsonConverters;

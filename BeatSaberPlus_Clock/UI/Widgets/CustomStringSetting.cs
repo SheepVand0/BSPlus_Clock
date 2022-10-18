@@ -28,6 +28,14 @@ namespace BeatSaberPlus_Clock.UI.Widgets
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Setup the setting
+        /// </summary>
+        /// <param name="p_InitialValue">Default string value</param>
+        /// <param name="p_MaxCharacter">The numbers of characters show</param>
+        /// <param name="p_RecreateNewKeyboard">Create another keyboard or set a reference</param>
+        /// <param name="p_Keyboard">The keyboard reference if no create</param>
+        /// <exception cref="Exception"></exception>
         internal void Setup(string p_InitialValue, int p_MaxCharacter, bool p_RecreateNewKeyboard, CustomKeyboard p_Keyboard = null)
         {
             BeatSaberPlus.SDK.UI.Backgroundable.SetOpacity(m_HorizontalLayout.gameObject, 0.4f);
@@ -50,6 +58,9 @@ namespace BeatSaberPlus_Clock.UI.Widgets
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Open string setting keyboard
+        /// </summary>
         internal void OpenKeyboard()
         {
             m_Keyboard.Open(Text);
@@ -58,12 +69,10 @@ namespace BeatSaberPlus_Clock.UI.Widgets
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
-        internal void SetValue(string p_Value)
-        {
-            Text = p_Value;
-            m_PreviewText.text = p_Value;
-        }
-
+        /// <summary>
+        /// Apply setting value
+        /// </summary>
+        /// <param name="p_Value"></param>
         internal void ApplyValue(string p_Value)
         {
             Text = p_Value;

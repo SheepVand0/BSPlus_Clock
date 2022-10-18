@@ -10,6 +10,10 @@ namespace BeatSaberPlus_Clock.UI.Widgets
 {
     internal class CustomFormatCellList : CustomUIComponent
     {
+        /// <summary>
+        /// Get bsml description by loading the file
+        /// </summary>
+        /// <returns></returns>
         public override string GetResourceDescription()
         {
             return Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), $"{Plugin.AssemblyName}.UI.Widgets.CustomFormatCellList.bsml");
@@ -30,6 +34,9 @@ namespace BeatSaberPlus_Clock.UI.Widgets
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Event when item was created
+        /// </summary>
         protected override void PostCreate()
         {
             m_Keyboard = Create<CustomKeyboard>(transform, true);
@@ -39,7 +46,9 @@ namespace BeatSaberPlus_Clock.UI.Widgets
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// Add a format to the list in config
+        /// </summary>
         private void AddFormat()
         {
             CConfig.Instance.GetActiveConfig().FormatOrder.Add("NewValue");
@@ -47,6 +56,9 @@ namespace BeatSaberPlus_Clock.UI.Widgets
             LoadFromConfig();
         }
 
+        /// <summary>
+        /// Load formats from config
+        /// </summary>
         internal void LoadFromConfig()
         {
             List<string> l_FormatOrder = CConfig.Instance.GetActiveConfig().FormatOrder;

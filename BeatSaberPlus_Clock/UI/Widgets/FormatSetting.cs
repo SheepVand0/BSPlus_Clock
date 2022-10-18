@@ -31,6 +31,12 @@ namespace BeatSaberPlus_Clock.UI.Widgets
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Consturctor
+        /// </summary>
+        /// <param name="p_ParentList">Parent list</param>
+        /// <param name="p_ValueName">Default value</param>
+        /// <param name="p_Index">Index in parent list</param>
         internal FormatSetting(CustomFormatCellList p_ParentList, string p_ValueName, int p_Index)
         {
             m_ParentList = p_ParentList;
@@ -58,12 +64,18 @@ namespace BeatSaberPlus_Clock.UI.Widgets
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Check if Up and down buttons can to be pressed
+        /// </summary>
         internal void UpdateUpAndDownButtons()
         {
             m_ButtonDown.interactable = ValueIndex != CConfig.Instance.GetActiveConfig().FormatOrder.Count - 1;
             m_ButtonUp.interactable = ValueIndex != 0;
         }
 
+        /// <summary>
+        /// Move Format up in list
+        /// </summary>
         private void MoveUp()
         {
             for (int l_i = 0; l_i < CConfig.Instance.GetActiveConfig().FormatOrder.Count; l_i++)
@@ -79,6 +91,9 @@ namespace BeatSaberPlus_Clock.UI.Widgets
             UpdateUpAndDownButtons();
         }
 
+        /// <summary>
+        /// Move format down in list
+        /// </summary>
         private void MoveDown()
         {
             for (int l_i = 0; l_i < CConfig.Instance.GetActiveConfig().FormatOrder.Count; l_i++)
@@ -97,6 +112,10 @@ namespace BeatSaberPlus_Clock.UI.Widgets
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Change format in config
+        /// </summary>
+        /// <param name="p_Value"></param>
         private void ApplyFormatSettingOnconfig(string p_Value)
         {
             if (string.IsNullOrEmpty(p_Value)) return;
@@ -109,6 +128,9 @@ namespace BeatSaberPlus_Clock.UI.Widgets
             Clock.Instance.SaveConfig();
         }
 
+        /// <summary>
+        /// Remove current format
+        /// </summary>
         private void RemoveFormatSetting()
         {
             for (int l_i = 0; l_i < CConfig.Instance.GetActiveConfig().FormatOrder.Count; l_i++)
