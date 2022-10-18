@@ -56,17 +56,24 @@
 
 			<horizontal id='TabFonts' pref-height='65' spacing='0' pad='0'>
 				<vertical>
+					<horizontal>
+						<text font-size='3.5' align='Center' font-color='yellow' text='Bold : '></text>
+						<horizontal pref-height='10'></horizontal>
+						<bool-setting id='BoolFontBold'/>
+						<horizontal pref-height='10'></horizontal>
+						<text font-size='3.5' align='Center' font-color='yellow' text='Italic : '></text>
+						<horizontal pref-height='10'></horizontal>
+						<bool-setting id='BoolFontItalic'/>
+						<horizontal pref-height='10'></horizontal>
+						<text font-size='3.5' align='Center' font-color='yellow' text='Underlined : '></text>
+						<horizontal pref-height='10'></horizontal>
+						<bool-setting id='BoolFontUnderlined'/>
+					</horizontal>
 					<text font-size='3.5' align='Center' font-color='yellow' text='Font : '></text>
 					<dropdown-list-setting id='FontDropdown' choices='Fonts' value='FontValue'></dropdown-list-setting>
 					<horizontal id='FontsRefreshLayout'></horizontal>
 					<text font-size='3.5' align='Center' font-color='yellow' text='Font Size (%) : '></text>
 					<slider-setting id='SliderFontSize' apply-on-change='true' min='0.01' max='1' increment='0.01' show-buttons='true' size-delta-x='40'/>
-					<text font-size='3.5' align='Center' font-color='yellow' text='Bold : '></text>
-					<bool-setting id='BoolFontBold'/>
-					<text font-size='3.5' align='Center' font-color='yellow' text='Italic : '></text>
-					<bool-setting id='BoolFontItalic'/>
-					<text font-size='3.5' align='Center' font-color='yellow' text='Underlined : '></text>
-					<bool-setting id='BoolFontUnderlined'/>
 					<horizontal pref-height='5' />
 				</vertical>
 			</horizontal>
