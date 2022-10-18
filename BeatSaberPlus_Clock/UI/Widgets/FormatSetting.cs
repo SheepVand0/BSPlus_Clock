@@ -10,7 +10,7 @@ namespace BeatSaberPlus_Clock.UI.Widgets
 {
     internal class FormatSetting
     {
-        #region Components
+
         [UIComponent("HorizontalLayout")] private readonly HorizontalLayoutGroup m_HorizontalLayout = null;
 
         CustomStringSetting m_StringFormatSettingValue = null;
@@ -18,13 +18,18 @@ namespace BeatSaberPlus_Clock.UI.Widgets
 
         Button m_ButtonDown = null;
         Button m_ButtonUp = null;
-        #endregion
 
         [UIValue("FormatSettingValue")] private string SelectedFormat { get => string.Empty; set => ApplyFormatSettingOnconfig(value); }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
 
         internal string ValueName { get; set; }
 
         private int ValueIndex { get; set; }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
 
         internal FormatSetting(CustomFormatCellList p_ParentList, string p_ValueName, int p_Index)
         {
@@ -32,6 +37,9 @@ namespace BeatSaberPlus_Clock.UI.Widgets
             ValueName = p_ValueName;
             ValueIndex = p_Index;
         }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
 
         [UIAction("#post-parse")]
         void PostParse()
@@ -46,6 +54,9 @@ namespace BeatSaberPlus_Clock.UI.Widgets
 
             UpdateUpAndDownButtons();
         }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
 
         internal void UpdateUpAndDownButtons()
         {
@@ -84,6 +95,8 @@ namespace BeatSaberPlus_Clock.UI.Widgets
             UpdateUpAndDownButtons();
         }
 
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
         private void ApplyFormatSettingOnconfig(string p_Value)
         {
             if (string.IsNullOrEmpty(p_Value)) return;

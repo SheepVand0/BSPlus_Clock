@@ -124,14 +124,14 @@ namespace BeatSaberPlus_Clock.UI
         #endregion
         #endregion
 
-        #region UIControl Properties
         //private HMUI.TextSegmentedControl m_TabSelector_Control = null;
         private CustomTextSegmentedControl m_TabSelector_Control = null;
-        #endregion
 
-        #region Properties
         float m_FontPercent = 0f;
-        #endregion
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        ///
         /// <summary>
         /// On view creation
         /// </summary>
@@ -152,16 +152,6 @@ namespace BeatSaberPlus_Clock.UI
                 new Widgets.Tab("Color", m_Tab_Color.gameObject),
                 new Widgets.Tab("Position", m_Tab_Position.gameObject)
             });
-            /*m_TabSelector_Control = BeatSaberPlus.SDK.UI.TextSegmentedControl.Create(m_TabSelector.transform as RectTransform, false);
-            m_TabSelector_Control.SetTexts(new string[] { "Profiles", "General", "Format", "Style", "Position"/*, "Anchors" });
-            m_TabSelector_Control.ReloadData();
-            m_TabSelector_Control.didSelectCellEvent += OnTabSelected;
-
-            BeatSaberPlus.SDK.UI.Backgroundable.SetOpacity(m_Tab_Profiles, 0.5f);
-            BeatSaberPlus.SDK.UI.Backgroundable.SetOpacity(m_Tab_General,  0.5f);
-            BeatSaberPlus.SDK.UI.Backgroundable.SetOpacity(m_Tab_Format,   0.5f);
-            BeatSaberPlus.SDK.UI.Backgroundable.SetOpacity(m_Tab_Style,    0.5f);
-            BeatSaberPlus.SDK.UI.Backgroundable.SetOpacity(m_Tab_Position, 0.5f);*/
 
             BeatSaberPlus.SDK.UI.Backgroundable.SetOpacity(m_Tabs.gameObject, 0.5f);
             #endregion
@@ -178,16 +168,17 @@ namespace BeatSaberPlus_Clock.UI
             m_ProfilesUpButton.onClick.AddListener(ProfilePageUp);
             m_ProfilesDownButton.onClick.AddListener(ProfilePageDown);
 
-            m_CancelImport = BeatSaberPlus.SDK.UI.Button.Create(m_ImportFrameButtonsTransform.transform, "Cancel", CloseImportFrame, p_PreferedWidth: 25);
-            m_ConfirmImport = BeatSaberPlus.SDK.UI.Button.CreatePrimary(m_ImportFrameButtonsTransform.transform, "Import", ImportProfile, p_PreferedWidth: 25);
+            m_CancelImport =  BeatSaberPlus.SDK.UI.Button.Create(m_ImportFrameButtonsTransform.transform,        "Cancel", CloseImportFrame, p_PreferedWidth: 25);
+            m_ConfirmImport = BeatSaberPlus.SDK.UI.Button.CreatePrimary(m_ImportFrameButtonsTransform.transform, "Import", ImportProfile,    p_PreferedWidth: 25);
+
             BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_ImportProfileFrame_DropDown, l_ClockImportDropdownEvent, true);
 
-            m_ProfilesUpButton.transform.localScale = Vector3.one * 0.5f;
+            m_ProfilesUpButton.transform.localScale   = Vector3.one * 0.5f;
             m_ProfilesDownButton.transform.localScale = Vector3.one * 0.5f;
 
             var l_BSMLTableView = m_ProfilesListView.GetComponentInChildren<BSMLTableView>();
             l_BSMLTableView.SetDataSource(null, false);
-            GameObject.DestroyImmediate(m_ProfilesListView.GetComponentInChildren<CustomListTableData>());
+            DestroyImmediate(m_ProfilesListView.GetComponentInChildren<CustomListTableData>());
             m_EventsList = l_BSMLTableView.gameObject.AddComponent<BeatSaberPlus.SDK.UI.DataSource.SimpleTextList>();
             m_EventsList.TableViewInstance = l_BSMLTableView;
             m_EventsList.CellSizeValue = 4.8f;
@@ -212,12 +203,14 @@ namespace BeatSaberPlus_Clock.UI
             BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_FontDropdown, l_FontDropdownEvent, true);
             Clock.e_OnFontsLoaded += OnFontsLoaded;
             OnFontsLoaded();
-            m_FontRefreshButton = BeatSaberPlus.SDK.UI.Button.Create(m_FontRefreshObject.transform, "Refresh fonts", () => { MTCoroutineStarter.Start(Clock.LoadFonts()); });
-            m_FontPercent = ((l_Config.FontSize / 10) * 100 / 300) / Clock.CLOCK_FONT_SIZE_MULTIPLIER;
+            m_FontRefreshButton = BeatSaberPlus.SDK.UI.Button.Create(m_FontRefreshObject.transform, "Refresh fonts",
+                () => { MTCoroutineStarter.Start(Clock.LoadFonts()); });
+
+            m_FontPercent       = ((l_Config.FontSize / 10) * 100 / 300) / Clock.CLOCK_FONT_SIZE_MULTIPLIER;
             BeatSaberPlus.SDK.UI.SliderSetting.Setup(m_Slider_FontSize, l_FontSizeEvent, BeatSaberPlus.SDK.UI.BSMLSettingFormartter.Percentage, m_FontPercent, true);
 
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolFontBold, l_Event, l_Config.FontBold, true);
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolFontItalic, l_Event, l_Config.FontItalic, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolFontBold,       l_Event, l_Config.FontBold,       true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolFontItalic,     l_Event, l_Config.FontItalic,     true);
             BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolFontUnderlined, l_Event, l_Config.FontUnderlined, true);
             #endregion
 
@@ -241,24 +234,14 @@ namespace BeatSaberPlus_Clock.UI
             #endregion
 
             #region Position
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableClockGrabbing, l_Event, l_Config.EnableClockGrabbing, true);
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableAnchors, l_Event, l_Config.EnableAnchors, true);
-            BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_ClockMovementMode, l_ClockMovementDropdownEvent, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableClockGrabbing,     l_Event, l_Config.EnableClockGrabbing, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableAnchors,           l_Event, l_Config.EnableAnchors,       true);
+            BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_ClockMovementMode, l_ClockMovementDropdownEvent,          true);
             #endregion
 
             Clock.e_OnConfigLoaded += OnConfigLoaded;
 
             //OnTabSelected(null, 0);
-        }
-
-        private void OnFontsLoaded()
-        {
-            m_FontDropdown.values.Clear();
-            foreach (var l_Current in Clock.m_AvailableFonts)
-                m_FontDropdown.values.Add(l_Current.name);
-            m_FontDropdown.UpdateChoices();
-            m_FontDropdown.Value = CConfig.Instance.GetActiveConfig().FontName;
-            m_FontDropdown.ApplyValue();
         }
 
         /// <summary>
@@ -272,7 +255,6 @@ namespace BeatSaberPlus_Clock.UI
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
-        #region Config managment
         private void OnConfigLoaded()
         {
             m_EnableClockGrabbing.Value = CConfig.Instance.GetActiveConfig().EnableClockGrabbing;
@@ -309,12 +291,10 @@ namespace BeatSaberPlus_Clock.UI
 
             RefreshProfilesList();
         }
-        #endregion
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
-        #region Profiles
         private void OnProfileSelected(HMUI.TableView p_TableView, int p_Index)
         {
             CConfig.Instance.SelectedProfileIndex = p_Index;
@@ -487,30 +467,10 @@ namespace BeatSaberPlus_Clock.UI
                 Logger.Instance.Error(l_E);
             }
         }
-        #endregion
-
-        ////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////
-        /*
-        /// <summary>
-        /// On Tab Selected
-        /// </summary>
-        /// <param name="p_Tab"></param>
-        /// <param name="p_Index"></param>
-
-        private void OnTabSelected(HMUI.SegmentedControl p_Tab, int p_Index)
-        {
-            m_Tab_Profiles.SetActive(p_Index == 0);
-            m_Tab_General.SetActive(p_Index == 1);
-            m_Tab_Format.SetActive(p_Index == 2);
-            m_Tab_Style.SetActive(p_Index == 3);
-            m_Tab_Position.SetActive(p_Index == 4);
-        }*/
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
-        #region Settings Change
         private void OnSettingChanged(object p_Value)
         {
             var l_Profile = CConfig.Instance.GetActiveConfig();
@@ -584,12 +544,22 @@ namespace BeatSaberPlus_Clock.UI
         {
             CConfig.Instance.GetActiveConfig().Separator = p_Value;
         }
-        #endregion
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
-        #region Font
+        private void OnFontsLoaded()
+        {
+            m_FontDropdown.values.Clear();
+
+            foreach (var l_Current in Clock.m_AvailableFonts)
+                m_FontDropdown.values.Add(l_Current.name);
+
+            m_FontDropdown.UpdateChoices();
+            m_FontDropdown.Value = CConfig.Instance.GetActiveConfig().FontName;
+            m_FontDropdown.ApplyValue();
+        }
+
         internal void UpdateFontsList()
         {
             List<object> l_NewFonts = new List<object>();
@@ -611,56 +581,33 @@ namespace BeatSaberPlus_Clock.UI
                 }
             CConfig.Instance.GetActiveConfig().FontName = Clock.m_AvailableFonts[0].name;
         }
-        #endregion
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
         private bool LoadEnvironment(Action p_Callback = null)
         {
-
-            //var l_MapSelectionViewController = Resources.FindObjectsOfTypeAll<LevelSelectionNavigationController>().First();
-            //StandardLevelDetailViewController l_DetailViewController = null;
-
-            //l_DetailViewController = Resources.FindObjectsOfTypeAll<StandardLevelDetailViewController>().First();
-
-            //if (l_DetailViewController.beatmapLevel == null || l_DetailViewController.selectedDifficultyBeatmap == null) { ShowMessageModal("Please go to solo menu before using this functionnality"); return false; }
-
             var l_GameSceneManager = Resources.FindObjectsOfTypeAll<GameScenesManager>().FirstOrDefault();
             var l_MainSettings = Resources.FindObjectsOfTypeAll<SettingsFlowCoordinator>().FirstOrDefault();
+            var l_MenuEnvironmentManager = Resources.FindObjectsOfTypeAll<MenuEnvironmentManager>().FirstOrDefault();
 
             l_GameSceneManager.MarkSceneAsPersistent("MenuCore");
 
             var l_TutorialSceneSetup = Resources.FindObjectsOfTypeAll<MenuTransitionsHelper>().FirstOrDefault().GetField<TutorialScenesTransitionSetupDataSO, MenuTransitionsHelper>("_tutorialScenesTransitionSetupData");
-            //var l_TutorialSceneSetup = Resources.FindObjectsOfTypeAll<MenuTransitionsHelper>().FirstOrDefault().GetField<StandardLevelScenesTransitionSetupDataSO, MenuTransitionsHelper>("_standardLevelScenesTransitionSetupData");
-
             var l_PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModel>().First().playerData;
 
-            /*l_TutorialSceneSetup.Init("Standard", l_DetailViewController.selectedDifficultyBeatmap, l_DetailViewController.beatmapLevel, l_PlayerData.overrideEnvironmentSettings,
-                l_PlayerData.colorSchemesSettings.GetSelectedColorScheme(), l_PlayerData.gameplayModifiers, l_PlayerData.playerSpecificSettings, l_PlayerData.practiceSettings, "No");*/
             l_TutorialSceneSetup.Init(l_PlayerData.playerSpecificSettings);
 
-            var l_MenuEnvironmentManager = Resources.FindObjectsOfTypeAll<MenuEnvironmentManager>().FirstOrDefault();
             l_MenuEnvironmentManager.ShowEnvironmentType(MenuEnvironmentManager.MenuEnvironmentType.None);
 
             l_GameSceneManager.PushScenes(l_TutorialSceneSetup, 0.25f, null, (_) =>
             {
-                //Resources.FindObjectsOfTypeAll<BeatSaberPlus.UI.MainViewFlowCoordinator>().FirstOrDefault().SetField("showBackButton", false);
-
-                //Transform l_Gameplay = GameObject.Find("StandardGameplay").transform;
                 Transform l_Gameplay = GameObject.Find("TutorialGameplay").transform;
 
                 l_MenuEnvironmentManager.transform.root.gameObject.SetActive(true);
 
                 Resources.FindObjectsOfTypeAll<MenuShockwave>().FirstOrDefault().gameObject.SetActive(false);
-
                 Resources.FindObjectsOfTypeAll<SongPreviewPlayer>().FirstOrDefault().CrossfadeToDefault();
-
-                //GameObject.Find("NarrowGameHUD").gameObject.SetActive(false);
-
-                /*var l_CountersPlus = IPA.Loader.PluginManager.GetPluginFromId("Counters+");
-                if (l_CountersPlus != null)
-                    GameObject.Find("Counters+ | Main Canvas");*/
 
                 if (!Environment.GetCommandLineArgs().Any(p_Arg => p_Arg.ToLowerInvariant() == "fpfc"))
                 {

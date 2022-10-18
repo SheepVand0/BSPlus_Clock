@@ -25,11 +25,8 @@ namespace BeatSaberPlus_Clock.UI.Widgets
         internal int StringSettingMaxCharacters { get; private set; }
         internal string Text { get; set; }
 
-        internal void SetValue(string p_Value)
-        {
-            Text = p_Value;
-            m_PreviewText.text = p_Value;
-        }
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
 
         internal void Setup(string p_InitialValue, int p_MaxCharacter, bool p_RecreateNewKeyboard, CustomKeyboard p_Keyboard = null)
         {
@@ -51,9 +48,20 @@ namespace BeatSaberPlus_Clock.UI.Widgets
             m_PreviewText.text = Text;
         }
 
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
         internal void OpenKeyboard()
         {
             m_Keyboard.Open(Text);
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
+        internal void SetValue(string p_Value)
+        {
+            Text = p_Value;
+            m_PreviewText.text = p_Value;
         }
 
         internal void ApplyValue(string p_Value)

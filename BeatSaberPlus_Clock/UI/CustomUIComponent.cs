@@ -13,6 +13,9 @@ namespace BeatSaberPlus_Clock.UI
         internal GameObject m_ParentGameObject;
         private BSMLParserParams m_ParserParams = null;
 
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
         internal static TItem Create<TItem>(Transform p_Parent, bool p_UnderParent, Action<TItem> p_PostCreate = null) where TItem : CustomUIComponent
         {
             GameObject l_ParentGameObject = (p_UnderParent) ? p_Parent.transform.gameObject : p_Parent.transform.parent.gameObject;
@@ -47,12 +50,20 @@ namespace BeatSaberPlus_Clock.UI
 
             return l_Item;
         }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
         private static IEnumerator _PostCreate(CustomUIComponent p_Item)
         {
             yield return new WaitForSeconds(0.4f);
 
             p_Item.PostCreate();
         }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
         public virtual string GetResourceDescription() { return string.Empty; }
         protected virtual void PostCreate(){}
     }

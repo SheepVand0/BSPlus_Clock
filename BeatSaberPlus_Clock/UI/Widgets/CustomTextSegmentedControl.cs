@@ -13,12 +13,18 @@ namespace BeatSaberPlus_Clock.UI.Widgets
         public string Name { get; set; }
         public GameObject Object { get; set; }
 
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
         internal Tab(string p_Name, GameObject p_Object)
         {
             Name = p_Name;
             Object = p_Object;
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     internal class CustomTextSegmentedControl
     {
@@ -27,6 +33,9 @@ namespace BeatSaberPlus_Clock.UI.Widgets
         private HMUI.TextSegmentedControl m_TabManager;
 
         public event Action<SegmentedControl, int> e_OnCellSelectedEvent;
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
 
         internal CustomTextSegmentedControl(RectTransform p_Parent, bool p_HideCellBackground, List<Tab> p_Tabs)
         {

@@ -12,10 +12,16 @@ namespace BeatSaberPlus_Clock.UI
         string m_Rich0 = string.Empty;
         string m_Rich1 = string.Empty;
 
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+
         protected override string GetViewContentDescription()
         {
             return "<bg><vertical><text id='ClockText' text='Clock' rich-text='true'/></vertical></bg>";
         }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
 
         internal void ApplySettings(CConfig.ClockConfig p_Config)
         {
@@ -82,6 +88,9 @@ namespace BeatSaberPlus_Clock.UI
 
             ClockFloatingScreen.Instance.SetScale(l_Text.Length * (p_Config.FontSize) * 0.8f, p_Config.FontSize * 2f);
         }
+
+        ////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
 
         internal void ApplyTime(int p_Hours, int p_Minutes, int p_Seconds)
         {
