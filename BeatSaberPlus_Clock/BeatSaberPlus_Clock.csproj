@@ -187,6 +187,7 @@
     <Compile Include="Clock.cs" />
     <Compile Include="UI\ClockFloatingScreen.cs" />
     <Compile Include="UI\ClockViewController.cs" />
+    <Compile Include="UI\LeftSettings.cs" />
     <Compile Include="UI\Widgets\CustomFormatCellList.cs" />
     <Compile Include="UI\Widgets\CustomKeyboard.cs" />
     <Compile Include="UI\Widgets\CustomStringSetting.cs" />
@@ -196,6 +197,9 @@
     <Compile Include="UI\Widgets\FormatSetting.cs" />
     <Compile Include="Utils\Utils.cs" />
     <EmbeddedResource Include="UI\Widgets\CustomFormatCellList.bsml" />
+    <EmbeddedResource Include="UI\LeftSettings.bsml">
+      <DependentUpon>LeftSettings.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />

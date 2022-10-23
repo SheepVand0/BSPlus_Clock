@@ -70,6 +70,11 @@ namespace BeatSaberPlus_Clock
         /// </summary>
         private UI.Settings m_SettingsView = null;
 
+        ///<summary>
+        /// Left settings view
+        ///</summary>
+        private UI.LeftSettings m_LeftSettingsView = null;
+
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
@@ -103,8 +108,12 @@ namespace BeatSaberPlus_Clock
             if (m_SettingsView == null)
                 m_SettingsView = BeatSaberUI.CreateViewController<UI.Settings>();
 
+            /// Create viewif needed
+            if (m_LeftSettingsView == null)
+                m_LeftSettingsView= BeatSaberUI.CreateViewController<UI.LeftSettings>();
+
             /// Change main view
-            return (m_SettingsView, null, null);
+            return (m_SettingsView, m_LeftSettingsView, null);
         }
 
         ////////////////////////////////////////////////////////////////////////////
