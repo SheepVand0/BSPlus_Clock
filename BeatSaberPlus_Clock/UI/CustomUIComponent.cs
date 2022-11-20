@@ -49,8 +49,7 @@ namespace BeatSaberPlus_Clock.UI
                 }
                 catch (System.Exception l_Exception)
                 {
-                    Logger.Instance.Error("[BeatSaberPlus_Clock.UI][CustomUIComponent.Create] Error:");
-                    Logger.Instance.Error(l_Exception);
+                    Logger.Instance.Error(l_Exception, nameof(BeatSaberPlus_Clock.UI.CustomUIComponent), nameof(Create));
                 }
             }
 
@@ -64,7 +63,7 @@ namespace BeatSaberPlus_Clock.UI
         ////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
-        /// Couroutine called to prevent BSML delay when Parse
+        /// Coroutine called to prevent BSML delay when Parse
         /// </summary>
         /// <param name="p_Item"></param>
         /// <returns></returns>
@@ -82,7 +81,7 @@ namespace BeatSaberPlus_Clock.UI
         /// Get content for parsing
         /// </summary>
         /// <returns></returns>
-        public virtual string GetResourceDescription() { return string.Empty; }
+        protected virtual string GetResourceDescription() { return string.Empty; }
         /// <summary>
         /// Function called when Item had finished creation (Overridable)
         /// </summary>

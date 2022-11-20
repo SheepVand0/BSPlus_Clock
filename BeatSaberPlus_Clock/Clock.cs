@@ -145,9 +145,10 @@ namespace BeatSaberPlus_Clock
                 ClockFloatingScreen.Instance.ApplySettings();
         }
         #endregion
+
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-        #region Memeber Functions
+
         /// <summary>
         /// Function to get all fonts in clock fonts folder
         /// </summary>
@@ -209,6 +210,6 @@ namespace BeatSaberPlus_Clock
             CConfig.Instance.Save();
             InvokeOnSettingChanged();
         }
-        #endregion
+
     }
 }

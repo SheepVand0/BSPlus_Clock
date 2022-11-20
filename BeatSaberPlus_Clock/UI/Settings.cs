@@ -22,129 +22,150 @@ namespace BeatSaberPlus_Clock.UI
     /// </summary>
     internal class Settings : BeatSaberPlus.SDK.UI.ResourceViewController<Settings>
     {
-        const float MIN_FONT_SIZE = 0.1f;
-        const float MAX_FONT_SIZE = 300.0f;
-
-        ////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////
-
-        #region UIComponents
-        #region Tabs
+        /// Tabs
         [UIObject("Tabs")] private readonly GameObject m_Tabs = null;
 
         [UIObject("TabSelector")] GameObject m_TabSelector = null;
 
-        [UIObject("TabProfiles")] GameObject m_Tab_Profiles = null;
-        [UIObject("TabGeneral")]  GameObject m_Tab_General  = null;
-        [UIObject("TabFonts")]    GameObject m_Tab_Font     = null;
-        [UIObject("TabFormat")]   GameObject m_Tab_Format   = null;
-        [UIObject("TabColor")]    GameObject m_Tab_Color    = null;
-        [UIObject("TabPosition")] GameObject m_Tab_Position = null;
-        #endregion
+        [UIObject("TabProfiles")] readonly GameObject m_Tab_Profiles = null;
+        [UIObject("TabGeneral")]  readonly GameObject m_Tab_General  = null;
+        [UIObject("TabFonts")]    readonly GameObject m_Tab_Font     = null;
+        [UIObject("TabFormat")]   readonly GameObject m_Tab_Format   = null;
+        [UIObject("TabColor")]    readonly GameObject m_Tab_Color    = null;
+        [UIObject("TabPosition")] readonly GameObject m_Tab_Position = null;
 
-        #region Profiles
-        [UIObject("ProfileListFrame_Background")] GameObject m_ProfileListBackground = null;
-        [UIObject("ProfilesList")] GameObject m_ProfilesListView = null;
-        [UIObject("ImportProfileFrame")] GameObject m_ImportProfileFrame = null;
-        [UIObject("ImportProfileFrame_Background")] GameObject m_ImportProfileFrameBackground = null;
-        [UIObject("ImportFrameButtonsTransform")] GameObject m_ImportFrameButtonsTransform = null;
+        ////////////////////////////////////////////////////////////////////////////
+        /// Profiles
 
-        [UIComponent("ProfilesUpButton")] Button m_ProfilesUpButton                = null;
-        [UIComponent("ProfilesDownButton")] Button m_ProfilesDownButton            = null;
-        [UIComponent("ProfilesManagementButtons")] HorizontalLayoutGroup m_ProfilesManagementBox = null;
-        [UIComponent("ImportProfileFrame_DropDown")] DropDownListSetting m_ImportProfileFrame_DropDown = null;
+
+        [UIObject("ProfileListFrame_Background")]   readonly GameObject m_ProfileListBackground = null;
+        [UIObject("ProfilesList")]                  readonly GameObject m_ProfilesListView      = null;
+        [UIObject("ImportProfileFrame")]            readonly GameObject m_ImportProfileFrame    = null;
+        [UIObject("ImportProfileFrame_Background")] readonly GameObject m_ImportProfileFrameBackground = null;
+        [UIObject("ImportFrameButtonsTransform")]   readonly GameObject m_ImportFrameButtonsTransform  = null;
+
+        [UIComponent("ProfilesUpButton")]            readonly Button m_ProfilesUpButton   = null;
+        [UIComponent("ProfilesDownButton")]          readonly Button m_ProfilesDownButton = null;
+        [UIComponent("ProfilesManagementButtons")]   readonly HorizontalLayoutGroup m_ProfilesManagementBox = null;
+        [UIComponent("ImportProfileFrame_DropDown")] readonly DropDownListSetting m_ImportProfileFrame_DropDown = null;
 
         BeatSaberPlus.SDK.UI.DataSource.SimpleTextList m_EventsList = null;
 
         CustomKeyboard m_ProfileRenameKeyboard = null;
         CustomKeyboard m_ProfileCreateKeyboard = null;
 
-        Button m_PrimaryNewProfileButton = null;
+        Button m_PrimaryNewProfileButton    = null;
         Button m_PrimaryRenameProfileButton = null;
         Button m_PrimaryDeleteProfileButton = null;
-        Button m_ExportButton = null;
-        Button m_ImportButton = null;
+        Button m_ExportButton               = null;
+        Button m_ImportButton               = null;
 
         Button m_ConfirmImport = null;
-        Button m_CancelImport = null;
+        Button m_CancelImport  = null;
 
         private int m_CurrentProfilePage = 0;
         private int m_PageCount = 1;
 
-        string m_SelectedImportProfile = string.Empty;
+        private string m_SelectedImportProfile = string.Empty;
 
-        [UIValue("ImportProfileFrame_DropDownOptions")] List<object> m_ImportProfileFrame_DropDownOptions = new List<object>();
-        #endregion
+        [UIValue("ImportProfileFrame_DropDownOptions")]
+        List<object> m_ImportProfileFrame_DropDownOptions = new List<object>();
 
-        #region General
-        [UIComponent("BoolSeparateDayHours")] ToggleSetting       m_BoolSeparateDayHours = null;
-        [UIComponent("BoolAmPm")]             ToggleSetting       m_BoolAmPm             = null;
-        #endregion
+        ////////////////////////////////////////////////////////////////////////////
+        /// General Settings
 
-        #region Font
-        [UIComponent("SliderFontSize")] SliderSetting m_Slider_FontSize = null;
-        [UIComponent("FontDropdown")] DropDownListSetting m_FontDropdown = null;
-        [UIObject("FontsRefreshLayout")] GameObject m_FontRefreshObject = null;
+        [UIComponent("BoolSeparateDayHours")] ToggleSetting m_BoolSeparateDayHours = null;
+        [UIComponent("BoolAmPm")]             ToggleSetting m_BoolAmPm = null;
+
+        ////////////////////////////////////////////////////////////////////////////
+        /// Font managing
+
+        [UIComponent("SliderFontSize")]  readonly SliderSetting       m_Slider_FontSize = null;
+        [UIComponent("FontDropdown")]    readonly DropDownListSetting m_FontDropdown = null;
+        [UIObject("FontsRefreshLayout")] readonly GameObject          m_FontRefreshObject = null;
 
         Button m_FontRefreshButton = null;
-        [UIValue("FontValue")] private string FontValue { get => string.Empty; set { } }
-        [UIValue("Fonts")] private List<object> m_Fonts = new List<object>() { "1" };
+        [UIValue("FontValue")] private string FontValue
+        {
+            get => string.Empty;
+            set { }
+        }
+        [UIValue("Fonts")] private List<object> m_Fonts = new List<object>()
+        {
+            "1"
+        };
 
-        [UIComponent("BoolFontBold")]       private ToggleSetting m_BoolFontBold       = null;
-        [UIComponent("BoolFontItalic")]     private ToggleSetting m_BoolFontItalic     = null;
-        [UIComponent("BoolFontUnderlined")] private ToggleSetting m_BoolFontUnderlined = null;
-        #endregion
+        [UIComponent("BoolFontBold")]       private readonly ToggleSetting m_BoolFontBold       = null;
+        [UIComponent("BoolFontItalic")]     private readonly ToggleSetting m_BoolFontItalic     = null;
+        [UIComponent("BoolFontUnderlined")] private readonly ToggleSetting m_BoolFontUnderlined = null;
 
-        #region Format
-        [UIObject("FormatElementsSeparatorTransform")] private GameObject FormatElementsSeparatorTransform = null;
-        [UIObject("FormatTransform")] GameObject m_FormatListTransform = null;
+        ////////////////////////////////////////////////////////////////////////////
+        /// Clock format
 
-        Button               m_DocButton = null;
-        CustomStringSetting  m_StringElementsSeparator = null;
-        CustomFormatCellList m_FormatSettingsList = null;
-        #endregion
+        [UIObject("FormatElementsSeparatorTransform")] private readonly GameObject FormatElementsSeparatorTransform = null;
+        [UIObject("FormatTransform")]                  private readonly GameObject m_FormatListTransform            = null;
 
-        #region Style
-        [UIComponent("BoolUseClockGradient")]           ToggleSetting m_Bool_UseClockGradient      = null;
-        [UIComponent("BoolUseFourClockGradientColors")] ToggleSetting m_Bool_UseFourGradientColors = null;
-        [UIComponent("BoolClockColor")]                 ColorSetting  m_Color_Clock                = null;
-        [UIComponent("ColorClock1")]                    ColorSetting  m_Color_Clock1               = null;
-        [UIComponent("ColorClock2")]                    ColorSetting  m_Color_Clock2               = null;
-        [UIComponent("ColorClock3")]                    ColorSetting  m_Color_Clock3               = null;
-        [UIComponent("ColorClock4")]                    ColorSetting  m_Color_Clock4               = null;
-        #endregion
+        Button m_DocButton = null;
 
-        #region Postition
-        [UIComponent("EnableClockGrabbing")] ToggleSetting       m_EnableClockGrabbing = null;
-        [UIComponent("ClockMovementMode")]   DropDownListSetting m_ClockMovementMode   = null;
-        [UIComponent("EnableAnchors")]       ToggleSetting       m_EnableAnchors       = null;
+        private CustomStringSetting m_StringElementsSeparator = null;
+        private CustomFormatCellList m_FormatSettingsList = null;
 
-        [UIValue("ClockMovementModeList")] private List<object> m_ClockMovementChoices = new List<object> { "Menu", "Game" };
-        [UIValue("MovementMode")] private string DropdownMovementMode { get => "Menu"; set { } }
-        #endregion
-        #endregion
+        ////////////////////////////////////////////////////////////////////////////
+        /// Clock colors
 
-        //private HMUI.TextSegmentedControl m_TabSelector_Control = null;
+        [UIComponent("BoolUseClockGradient")]           readonly ToggleSetting m_Bool_UseClockGradient      = null;
+        [UIComponent("BoolUseFourClockGradientColors")] readonly ToggleSetting m_Bool_UseFourGradientColors = null;
+        [UIComponent("BoolClockColor")] readonly ColorSetting m_Color_Clock  = null;
+        [UIComponent("ColorClock1")]    readonly ColorSetting m_Color_Clock1 = null;
+        [UIComponent("ColorClock2")]    readonly ColorSetting m_Color_Clock2 = null;
+        [UIComponent("ColorClock3")]    readonly ColorSetting m_Color_Clock3 = null;
+        [UIComponent("ColorClock4")]    readonly ColorSetting m_Color_Clock4 = null;
+
+        ////////////////////////////////////////////////////////////////////////////
+        /// Clock position
+
+        [UIComponent("EnableClockGrabbing")] readonly ToggleSetting       m_EnableClockGrabbing = null;
+        [UIComponent("ClockMovementMode")]   readonly DropDownListSetting m_ClockMovementMode   = null;
+        [UIComponent("EnableAnchors")]       readonly ToggleSetting       m_EnableAnchors       = null;
+
+        [UIValue("ClockMovementModeList")] private List<object> m_ClockMovementChoices = new List<object>
+        {
+            "Menu",
+            "Game"
+        };
+        [UIValue("MovementMode")] private string DropdownMovementMode
+        {
+            get => "Menu";
+            // ReSharper disable once ValueParameterNotUsed
+            set { }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        /// Others
+
         private CustomTextSegmentedControl m_TabSelector_Control = null;
 
-        float m_FontPercent = 0f;
+        private float m_FontPercent = 0f;
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-        ///
+
         /// <summary>
         /// On view creation
         /// </summary>
         protected override sealed void OnViewCreation()
         {
-            var l_Event                      = new BeatSaberMarkupLanguage.Parser.BSMLAction(this, this.GetType().GetMethod(nameof(Settings.OnSettingChanged), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic));
-            var l_FontSizeEvent              = new BeatSaberMarkupLanguage.Parser.BSMLAction(this, this.GetType().GetMethod(nameof(Settings.OnFontSizeChanged), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic));
-            var l_FontDropdownEvent          = new BeatSaberMarkupLanguage.Parser.BSMLAction(this, this.GetType().GetMethod(nameof(Settings.OnFontSelected), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic));
+            var l_Event = new BeatSaberMarkupLanguage.Parser.BSMLAction(this, this.GetType().GetMethod(nameof(Settings.OnSettingChanged), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic));
+            var l_FontSizeEvent = new BeatSaberMarkupLanguage.Parser.BSMLAction(this, this.GetType().GetMethod(nameof(Settings.OnFontSizeChanged), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic));
+            var l_FontDropdownEvent = new BeatSaberMarkupLanguage.Parser.BSMLAction(this, this.GetType().GetMethod(nameof(Settings.OnFontSelected), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic));
             var l_ClockMovementDropdownEvent = new BeatSaberMarkupLanguage.Parser.BSMLAction(this, this.GetType().GetMethod(nameof(Settings.OnMovementModeSelected), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic));
-            var l_ClockImportDropdownEvent   = new BeatSaberMarkupLanguage.Parser.BSMLAction(this, this.GetType().GetMethod(nameof(Settings.OnImportProfileSelected), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic));
+            var l_ClockImportDropdownEvent = new BeatSaberMarkupLanguage.Parser.BSMLAction(this, this.GetType().GetMethod(nameof(Settings.OnImportProfileSelected), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic));
 
-            #region Tabs
-            m_TabSelector_Control = new CustomTextSegmentedControl(m_TabSelector.transform as RectTransform, false, new List<Widgets.Tab> {
+            ////////////////////////////////////////////////////////////////////////////
+            /// Tabs
+
+            m_TabSelector_Control = new CustomTextSegmentedControl(m_TabSelector.transform as RectTransform, false, new List<Widgets.Tab>
+            {
                 new Widgets.Tab("Profiles", m_Tab_Profiles.gameObject),
                 new Widgets.Tab("General", m_Tab_General.gameObject),
                 new Widgets.Tab("Font", m_Tab_Font.gameObject),
@@ -154,26 +175,27 @@ namespace BeatSaberPlus_Clock.UI
             });
 
             BeatSaberPlus.SDK.UI.Backgroundable.SetOpacity(m_Tabs.gameObject, 0.5f);
-            #endregion
+
+            ////////////////////////////////////////////////////////////////////////////
+            /// Profiles
 
             var l_Config = CConfig.Instance.GetActiveConfig();
 
-            #region Profiles
-            m_PrimaryNewProfileButton    = BeatSaberPlus.SDK.UI.Button.CreatePrimary(m_ProfilesManagementBox.transform, "NEW",    CreateProfile, p_PreferedWidth: 25);
+            m_PrimaryNewProfileButton = BeatSaberPlus.SDK.UI.Button.CreatePrimary(m_ProfilesManagementBox.transform, "NEW", CreateProfile, p_PreferedWidth: 25);
             m_PrimaryDeleteProfileButton = BeatSaberPlus.SDK.UI.Button.CreatePrimary(m_ProfilesManagementBox.transform, "DELETE", DeleteProfile, p_PreferedWidth: 25);
             m_PrimaryRenameProfileButton = BeatSaberPlus.SDK.UI.Button.CreatePrimary(m_ProfilesManagementBox.transform, "RENAME", RenameProfile, p_PreferedWidth: 25);
-            m_ExportButton               = BeatSaberPlus.SDK.UI.Button.Create(m_ProfilesManagementBox.transform, "EXPORT", ExportCurrentProfile, p_PreferedWidth: 25);
-            m_ImportButton               = BeatSaberPlus.SDK.UI.Button.Create(m_ProfilesManagementBox.transform, "IMPORT", OpenImportFrame, p_PreferedWidth: 25);
+            m_ExportButton = BeatSaberPlus.SDK.UI.Button.Create(m_ProfilesManagementBox.transform, "EXPORT", ExportCurrentProfile, p_PreferedWidth: 25);
+            m_ImportButton = BeatSaberPlus.SDK.UI.Button.Create(m_ProfilesManagementBox.transform, "IMPORT", OpenImportFrame, p_PreferedWidth: 25);
 
             m_ProfilesUpButton.onClick.AddListener(ProfilePageUp);
             m_ProfilesDownButton.onClick.AddListener(ProfilePageDown);
 
-            m_CancelImport =  BeatSaberPlus.SDK.UI.Button.Create(m_ImportFrameButtonsTransform.transform,        "Cancel", CloseImportFrame, p_PreferedWidth: 25);
-            m_ConfirmImport = BeatSaberPlus.SDK.UI.Button.CreatePrimary(m_ImportFrameButtonsTransform.transform, "Import", ImportProfile,    p_PreferedWidth: 25);
+            m_CancelImport = BeatSaberPlus.SDK.UI.Button.Create(m_ImportFrameButtonsTransform.transform, "Cancel", CloseImportFrame, p_PreferedWidth: 25);
+            m_ConfirmImport = BeatSaberPlus.SDK.UI.Button.CreatePrimary(m_ImportFrameButtonsTransform.transform, "Import", ImportProfile, p_PreferedWidth: 25);
 
             BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_ImportProfileFrame_DropDown, l_ClockImportDropdownEvent, true);
 
-            m_ProfilesUpButton.transform.localScale   = Vector3.one * 0.5f;
+            m_ProfilesUpButton.transform.localScale = Vector3.one * 0.5f;
             m_ProfilesDownButton.transform.localScale = Vector3.one * 0.5f;
 
             var l_BSMLTableView = m_ProfilesListView.GetComponentInChildren<BSMLTableView>();
@@ -186,43 +208,47 @@ namespace BeatSaberPlus_Clock.UI
             l_BSMLTableView.SetDataSource(m_EventsList, false);
 
             RefreshProfilesList();
-            #endregion
 
-            #region General
+            ////////////////////////////////////////////////////////////////////////////
+            /// General settings
+
             m_StringElementsSeparator = CustomUIComponent.Create<CustomStringSetting>(FormatElementsSeparatorTransform.transform, true, (p_Item) =>
             {
                 p_Item.Setup(l_Config.Separator, 32, true);
                 p_Item.OnChange += OnSeparatorChange;
             });
             BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolSeparateDayHours, l_Event, l_Config.SeparateDayHours, true);
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolAmPm,             l_Event, l_Config.ShowAmPm, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolAmPm, l_Event, l_Config.ShowAmPm, true);
             //UpdateFontsList();
-            #endregion
 
-            #region Font
+            ////////////////////////////////////////////////////////////////////////////
+            /// Font managing
+
             BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_FontDropdown, l_FontDropdownEvent, true);
             Clock.e_OnFontsLoaded += OnFontsLoaded;
             OnFontsLoaded();
             m_FontRefreshButton = BeatSaberPlus.SDK.UI.Button.Create(m_FontRefreshObject.transform, "Refresh fonts",
                 () => { MTCoroutineStarter.Start(Clock.LoadFonts()); });
 
-            m_FontPercent       = ((l_Config.FontSize / 10) * 100 / 300) / Clock.CLOCK_FONT_SIZE_MULTIPLIER;
+            m_FontPercent = ((l_Config.FontSize / 10) * 100 / 300) / Clock.CLOCK_FONT_SIZE_MULTIPLIER;
             BeatSaberPlus.SDK.UI.SliderSetting.Setup(m_Slider_FontSize, l_FontSizeEvent, BeatSaberPlus.SDK.UI.BSMLSettingFormartter.Percentage, m_FontPercent, true);
 
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolFontBold,       l_Event, l_Config.FontBold,       true);
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolFontItalic,     l_Event, l_Config.FontItalic,     true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolFontBold, l_Event, l_Config.FontBold, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolFontItalic, l_Event, l_Config.FontItalic, true);
             BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_BoolFontUnderlined, l_Event, l_Config.FontUnderlined, true);
-            #endregion
 
-            #region Format
+            ////////////////////////////////////////////////////////////////////////////
+            /// Format
+
             m_FormatSettingsList = CustomUIComponent.Create<CustomFormatCellList>(m_FormatListTransform.transform, true);
-            #endregion
 
-            #region Style
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_Bool_UseClockGradient,      l_Event, l_Config.UseGradient,           true);
+            ////////////////////////////////////////////////////////////////////////////
+            /// Colors
+
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_Bool_UseClockGradient, l_Event, l_Config.UseGradient, true);
             BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_Bool_UseFourGradientColors, l_Event, l_Config.UseFourColorsGradient, true);
 
-            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock,  l_Event, l_Config.ClockColor,          true);
+            BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock, l_Event, l_Config.ClockColor, true);
             BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock1, l_Event, l_Config.ClockGradientColor1, true);
             BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock2, l_Event, l_Config.ClockGradientColor2, true);
             BeatSaberPlus.SDK.UI.ColorSetting.Setup(m_Color_Clock3, l_Event, l_Config.ClockGradientColor3, true);
@@ -231,23 +257,24 @@ namespace BeatSaberPlus_Clock.UI
             m_Color_Clock2.interactable = l_Config.UseGradient;
             m_Color_Clock3.interactable = l_Config.UseFourColorsGradient;
             m_Color_Clock4.interactable = l_Config.UseFourColorsGradient;
-            #endregion
 
-            #region Position
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableClockGrabbing,     l_Event, l_Config.EnableClockGrabbing, true);
-            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableAnchors,           l_Event, l_Config.EnableAnchors,       true);
-            BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_ClockMovementMode, l_ClockMovementDropdownEvent,          true);
-            #endregion
+            ////////////////////////////////////////////////////////////////////////////
+            /// Position
+
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableClockGrabbing, l_Event, l_Config.EnableClockGrabbing, true);
+            BeatSaberPlus.SDK.UI.ToggleSetting.Setup(m_EnableAnchors, l_Event, l_Config.EnableAnchors, true);
+            BeatSaberPlus.SDK.UI.DropDownListSetting.Setup(m_ClockMovementMode, l_ClockMovementDropdownEvent, true);
+
+            ////////////////////////////////////////////////////////////////////////////
+            /// Event
 
             Clock.e_OnConfigLoaded += OnConfigLoaded;
-
-            //OnTabSelected(null, 0);
         }
 
         /// <summary>
         /// On view deactivation
         /// </summary>
-        protected sealed override void OnViewDeactivation()
+        protected override sealed void OnViewDeactivation()
         {
             Clock.Instance.SaveConfig();
         }
@@ -302,6 +329,7 @@ namespace BeatSaberPlus_Clock.UI
         /// </summary>
         /// <param name="p_TableView"></param>
         /// <param name="p_Index"></param>
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private void OnProfileSelected(HMUI.TableView p_TableView, int p_Index)
         {
             CConfig.Instance.SelectedProfileIndex = p_Index;
@@ -312,20 +340,22 @@ namespace BeatSaberPlus_Clock.UI
         /// <summary>
         /// Rebuild the list of profiles
         /// </summary>
-        internal void RefreshProfilesList()
+        private void RefreshProfilesList()
         {
             m_EventsList.TableViewInstance.ClearSelection();
             m_EventsList.Data.Clear();
 
             if (CConfig.Instance.Profiles.Count >= Clock.EVENT_PER_PAGES)
             {
+                // ReSharper disable once PossibleLossOfFraction
                 m_PageCount = (int)System.Math.Floor((float)(CConfig.Instance.Profiles.Count / Clock.EVENT_PER_PAGES));
                 if (m_CurrentProfilePage > m_PageCount)
                     m_CurrentProfilePage = m_PageCount;
 
                 m_ProfilesUpButton.interactable = !(m_CurrentProfilePage == 0);
                 m_ProfilesDownButton.interactable = !(m_CurrentProfilePage == m_PageCount);
-            } else
+            }
+            else
             {
                 m_ProfilesUpButton.interactable = false;
                 m_ProfilesDownButton.interactable = false;
@@ -335,7 +365,7 @@ namespace BeatSaberPlus_Clock.UI
 
             for (int l_i = 0; l_i < CConfig.Instance.Profiles.Count - (m_CurrentProfilePage * Clock.EVENT_PER_PAGES); l_i++)
             {
-                m_EventsList.Data.Add((CConfig.Instance.Profiles[l_i+(m_CurrentProfilePage*Clock.EVENT_PER_PAGES)].ProfileName, null));
+                m_EventsList.Data.Add((CConfig.Instance.Profiles[l_i + (m_CurrentProfilePage * Clock.EVENT_PER_PAGES)].ProfileName, null));
             }
 
             m_EventsList.TableViewInstance.ReloadData();
@@ -373,7 +403,11 @@ namespace BeatSaberPlus_Clock.UI
                 {
                     p_Item.OnKeyboardEnterPressed += (p_OldValue, p_NewValue) =>
                     {
-                        if (p_NewValue == string.Empty) { ShowMessageModal("Configs Names Can't be empty"); return; }
+                        if (p_NewValue == string.Empty)
+                        {
+                            ShowMessageModal("Configs Names Can't be empty");
+                            return;
+                        }
                         CConfig.Instance.Profiles.Add(new CConfig.ClockConfig(p_NewValue));
                         CConfig.Instance.SelectedProfileIndex = CConfig.Instance.Profiles.Count - 1;
                         CConfig.Instance.Save();
@@ -389,7 +423,11 @@ namespace BeatSaberPlus_Clock.UI
         /// </summary>
         private void DeleteProfile()
         {
-            if (CConfig.Instance.Profiles.Count == 1) { ShowMessageModal("You can't delete a config when you only own one"); return; }
+            if (CConfig.Instance.Profiles.Count == 1)
+            {
+                ShowMessageModal("You can't delete a config when you only own one");
+                return;
+            }
 
             string l_Name = CConfig.Instance.GetActiveConfig().ProfileName;
 
@@ -400,7 +438,7 @@ namespace BeatSaberPlus_Clock.UI
             CConfig.Instance.Save();
             RefreshProfilesList();
 
-            ShowMessageModal($"Succefully deleted profile : {l_Name}");
+            ShowMessageModal($"Successfully deleted profile : {l_Name}");
         }
         /// <summary>
         /// Rename profile by clicking the button
@@ -413,7 +451,11 @@ namespace BeatSaberPlus_Clock.UI
                 {
                     p_Item.OnKeyboardEnterPressed += (p_CurrentName, p_NewName) =>
                     {
-                        if (p_NewName == string.Empty) { ShowMessageModal("Configs Names Can't be empty"); return; }
+                        if (p_NewName == string.Empty)
+                        {
+                            ShowMessageModal("Configs Names Can't be empty");
+                            return;
+                        }
                         CConfig.Instance.Profiles[CConfig.Instance.SelectedProfileIndex].ProfileName = p_NewName;
                         CConfig.Instance.Save();
                         Clock.InvokeOnConfigLoaded();
@@ -439,11 +481,12 @@ namespace BeatSaberPlus_Clock.UI
                 l_FileName = string.Concat(l_FileName.Split(System.IO.Path.GetInvalidFileNameChars()));
 
                 System.IO.File.WriteAllText($"{Clock.CLOCK_EXPORT_FOLDER}{l_FileName}", l_SerializedConfig);
-                ShowMessageModal($"Succefully exported {CConfig.Instance.Profiles[CConfig.Instance.SelectedProfileIndex].ProfileName}");
-            } catch (System.Exception l_E)
+                ShowMessageModal($"Successfully exported {CConfig.Instance.Profiles[CConfig.Instance.SelectedProfileIndex].ProfileName}");
+            }
+            catch (System.Exception l_E)
             {
                 ShowMessageModal($"Error on exporting : {l_E.Message}");
-                Logger.Instance.Error(l_E);
+                Logger.Instance.Error(l_E, nameof(Settings), nameof(ExportCurrentProfile));
             }
         }
         /// <summary>
@@ -457,11 +500,16 @@ namespace BeatSaberPlus_Clock.UI
             if (!System.IO.Directory.Exists(Clock.CLOCK_IMPORT_FOLDER))
                 System.IO.Directory.CreateDirectory(Clock.CLOCK_IMPORT_FOLDER);
 
-            var l_Files = new List<object>();
-            foreach (var l_File in System.IO.Directory.GetFiles(Clock.CLOCK_IMPORT_FOLDER, "*.bspclock"))
+            List<object> l_Files = new();
+            foreach (string l_File in System.IO.Directory.GetFiles(Clock.CLOCK_IMPORT_FOLDER, "*.bspclock"))
                 l_Files.Add(System.IO.Path.GetFileNameWithoutExtension(l_File));
 
-            if (l_Files.Count == 0) { ShowMessageModal("No config to import was found"); CloseImportFrame(); return; }
+            if (l_Files.Count == 0)
+            {
+                ShowMessageModal("No config to import was found");
+                CloseImportFrame();
+                return;
+            }
 
             m_ImportProfileFrame_DropDownOptions = l_Files;
             m_ImportProfileFrame_DropDown.values = l_Files;
@@ -483,18 +531,23 @@ namespace BeatSaberPlus_Clock.UI
             try
             {
                 string l_FileName = $"{Clock.CLOCK_IMPORT_FOLDER}{m_SelectedImportProfile}.bspclock";
-                if (!System.IO.File.Exists(l_FileName)) { ShowMessageModal("File not found"); return; }
+                if (!System.IO.File.Exists(l_FileName))
+                {
+                    ShowMessageModal("File not found");
+                    return;
+                }
                 string l_NewConfigName = string.Empty;
                 CConfig.ClockConfig l_NewConfig = JsonConvert.DeserializeObject<CConfig.ClockConfig>(System.IO.File.ReadAllText(l_FileName), CConfig.Instance.GetConverters().ToArray());
                 CConfig.Instance.Profiles.Add(l_NewConfig);
                 l_NewConfig.ProfileName = $"{l_NewConfig.ProfileName} (Imported)";
-                ShowMessageModal($"Succefully Imported Config {l_NewConfig.ProfileName}");
+                ShowMessageModal($"Successfully Imported Config {l_NewConfig.ProfileName}");
                 CloseImportFrame();
                 RefreshProfilesList();
-            } catch (System.Exception l_E)
+            }
+            catch (System.Exception l_E)
             {
                 ShowMessageModal($"Error on import : {l_E.Message}");
-                Logger.Instance.Error(l_E);
+                Logger.Instance.Error(l_E, nameof(Settings), nameof(ImportProfile));
             }
         }
 
@@ -508,21 +561,21 @@ namespace BeatSaberPlus_Clock.UI
         {
             var l_Profile = CConfig.Instance.GetActiveConfig();
 
-            l_Profile.EnableClockGrabbing   = m_EnableClockGrabbing.Value;
-            l_Profile.EnableAnchors         = m_EnableAnchors.Value;
-            l_Profile.SeparateDayHours      = m_BoolSeparateDayHours.Value;
-            l_Profile.ShowAmPm              = m_BoolAmPm.Value;
-            l_Profile.Separator             = m_StringElementsSeparator.Text;
-            l_Profile.UseGradient           = m_Bool_UseClockGradient.Value;
+            l_Profile.EnableClockGrabbing = m_EnableClockGrabbing.Value;
+            l_Profile.EnableAnchors = m_EnableAnchors.Value;
+            l_Profile.SeparateDayHours = m_BoolSeparateDayHours.Value;
+            l_Profile.ShowAmPm = m_BoolAmPm.Value;
+            l_Profile.Separator = m_StringElementsSeparator.Text;
+            l_Profile.UseGradient = m_Bool_UseClockGradient.Value;
             l_Profile.UseFourColorsGradient = m_Bool_UseFourGradientColors.Value;
-            l_Profile.ClockColor            = m_Color_Clock.CurrentColor;
-            l_Profile.ClockGradientColor1   = m_Color_Clock1.CurrentColor;
-            l_Profile.ClockGradientColor2   = m_Color_Clock2.CurrentColor;
-            l_Profile.ClockGradientColor3   = m_Color_Clock3.CurrentColor;
-            l_Profile.ClockGradientColor4   = m_Color_Clock4.CurrentColor;
-            l_Profile.FontBold              = m_BoolFontBold.Value;
-            l_Profile.FontItalic            = m_BoolFontItalic.Value;
-            l_Profile.FontUnderlined        = m_BoolFontUnderlined.Value;
+            l_Profile.ClockColor = m_Color_Clock.CurrentColor;
+            l_Profile.ClockGradientColor1 = m_Color_Clock1.CurrentColor;
+            l_Profile.ClockGradientColor2 = m_Color_Clock2.CurrentColor;
+            l_Profile.ClockGradientColor3 = m_Color_Clock3.CurrentColor;
+            l_Profile.ClockGradientColor4 = m_Color_Clock4.CurrentColor;
+            l_Profile.FontBold = m_BoolFontBold.Value;
+            l_Profile.FontItalic = m_BoolFontItalic.Value;
+            l_Profile.FontUnderlined = m_BoolFontUnderlined.Value;
 
             m_Color_Clock1.interactable = CConfig.Instance.GetActiveConfig().UseGradient;
             m_Color_Clock2.interactable = CConfig.Instance.GetActiveConfig().UseGradient;
@@ -562,7 +615,12 @@ namespace BeatSaberPlus_Clock.UI
             switch ((string)p_Value)
             {
                 case "Game":
-                    if (LoadEnvironment() == false) { m_ClockMovementMode.Value = "Menu"; m_ClockMovementMode.ApplyValue(); return; }
+                    if (LoadEnvironment() == false)
+                    {
+                        m_ClockMovementMode.Value = "Menu";
+                        m_ClockMovementMode.ApplyValue();
+                        return;
+                    }
 
                     Clock.m_MovementMode = BeatSaberPlus.SDK.Game.Logic.SceneType.Playing;
                     ClockFloatingScreen.Instance.SetClockPositionByScene(BeatSaberPlus.SDK.Game.Logic.SceneType.Playing);
@@ -634,7 +692,11 @@ namespace BeatSaberPlus_Clock.UI
                 if (p_Name == l_Current.name)
                 {
                     CConfig.Instance.GetActiveConfig().FontName = p_Name;
-                    if (p_ApplyOnDropdown) { m_FontDropdown.Value = p_Name; m_FontDropdown.ApplyValue(); }
+                    if (p_ApplyOnDropdown)
+                    {
+                        m_FontDropdown.Value = p_Name;
+                        m_FontDropdown.ApplyValue();
+                    }
                     return;
                 }
             CConfig.Instance.GetActiveConfig().FontName = Clock.m_AvailableFonts[0].name;

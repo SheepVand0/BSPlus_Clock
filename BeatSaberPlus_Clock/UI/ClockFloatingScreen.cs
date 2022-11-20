@@ -47,7 +47,7 @@ namespace BeatSaberPlus_Clock.UI
         internal static ClockFloatingScreen CreateClock()
         {
             if (Instance != null) { Logger.Instance.Error("An instance of the clock already exist not creating"); return null; }
-            ClockFloatingScreen l_Clock = new GameObject("BeatSaberPlusClockFloatingSceen").AddComponent<ClockFloatingScreen>();
+            ClockFloatingScreen l_Clock = new GameObject("BeatSaberPlusClockFloatingScreen").AddComponent<ClockFloatingScreen>();
             return l_Clock;
         }
 

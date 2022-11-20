@@ -14,7 +14,7 @@ namespace BeatSaberPlus_Clock.UI.Widgets
         /// Get bsml description by loading the file
         /// </summary>
         /// <returns></returns>
-        public override string GetResourceDescription()
+        protected override string GetResourceDescription()
         {
             return Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), $"{Plugin.AssemblyName}.UI.Widgets.CustomFormatCellList.bsml");
         }
